@@ -10,9 +10,12 @@ import 'controller.dart';
 
 part 'components/drop_down.dart';
 part 'components/skin_fold_field.dart';
+part 'components/preference_card.dart';
 part 'components/text_form.dart';
 part 'layers/basic_info.dart';
 part 'layers/skin_fold_form.dart';
+part 'layers/workout_form.dart';
+part 'layers/preference_form.dart';
 
 class BasicInfoScreen extends StatelessWidget {
   const BasicInfoScreen({super.key});
@@ -34,7 +37,7 @@ class _Layout extends StatelessWidget {
     final BasicInfoController controller = context.watch();
     return Scaffold(
       appBar: childAppBar(context: context),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding * 1.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,11 +79,25 @@ class _Layout extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 32.0),
+
+            // SizedBox(height: 32.0),
+            vPad20,
+            Expanded(
+              child: SingleChildScrollView(
+                child: controller.step == 0
+                    ? const BasicInfoForm()
+                    : controller.step == 1
+                    ? const SkinfoldForm()
+                    : controller.step == 2
+                    ? const WorkOutForm()
+                    : PreferencesForm(),
+              ),
+            ),
+
             // Conditional content rendering based on local state
-            if (controller.step == 0) const BasicInfoForm(),
-            if (controller.step == 1) const SkinfoldForm(),
-            // if (step == 2) const WorkOutForm(),
+            // if (controller.step == 0) const BasicInfoForm(),
+            // if (controller.step == 1) const SkinfoldForm(),
+            // if (controller. step == 2) const WorkOutForm(),
             // if (step == 3) const PreferencesForm(),
           ],
         ),
