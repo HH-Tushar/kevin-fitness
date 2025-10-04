@@ -47,14 +47,14 @@ class WorkOutTrackView extends StatelessWidget {
             ),
           ),
 
-          Positioned(
-            left: 0,
-            top: 48,
-            child: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-            ),
-          ),
+          // Positioned(
+          //   left: 0,
+          //   top: 48,
+          //   child: IconButton(
+          //     onPressed: () => Navigator.of(context).pop(),
+          //     icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          //   ),
+          // ),
           // Day title
           Positioned(
             left: 30,

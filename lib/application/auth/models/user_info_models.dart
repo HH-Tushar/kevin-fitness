@@ -1,121 +1,113 @@
+import 'dart:convert';
+
 class UserInfo {
-  final UserProfile profile;
-  final List<MealPlan> mealPlans;
-  final List<WorkoutPlan> workoutPlans;
+    final Profile profile;
+    final List<Plan> mealPlans;
+    final List<Plan> workoutPlans;
 
-  UserInfo({
-    required this.profile,
-    required this.mealPlans,
-    required this.workoutPlans,
-  });
+    UserInfo({
+        required this.profile,
+        required this.mealPlans,
+        required this.workoutPlans,
+    });
 
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    // Helper function to safely convert to list
-    List<dynamic> _safeList(dynamic value) {
-      if (value == null) return [];
-      if (value is List) return value;
-      if (value is Map) return [value]; // If it's a single object, wrap it in a list
-      return [];
-    }
+    factory UserInfo.fromRawJson(String str) => UserInfo.fromJson(json.decode(str));
 
-    return UserInfo(
-      profile: UserProfile.fromJson(json['profile'] ?? {}),
-      mealPlans: _safeList(json['meal_plans'])
-          .map((plan) => MealPlan.fromJson(plan))
-          .toList(),
-      workoutPlans: _safeList(json['workout_plans'])
-          .map((plan) => WorkoutPlan.fromJson(plan))
-          .toList(),
+    String toRawJson() => json.encode(toJson());
+
+    factory UserInfo.fromJson(Map<String, dynamic> json) => UserInfo(
+        profile: Profile.fromJson(json["profile"]),
+        mealPlans: List<Plan>.from(json["meal_plans"].map((x) => Plan.fromJson(x))),
+        workoutPlans: List<Plan>.from(json["workout_plans"].map((x) => Plan.fromJson(x))),
     );
-  }
+
+    Map<String, dynamic> toJson() => {
+        "profile": profile.toJson(),
+        "meal_plans": List<dynamic>.from(mealPlans.map((x) => x.toJson())),
+        "workout_plans": List<dynamic>.from(workoutPlans.map((x) => x.toJson())),
+    };
 }
 
-class UserProfile {
-  final int id;
-  final String interestedWorkout;
-  final String fitnessLevel;
-  final String dietaryPreferences;
-  final double weight;
+class Plan {
+    final int id;
+    final String? mealPlanName;
+    final String tags;
+    final DateTime startDate;
+    final DateTime endDate;
+    final bool isCompleted;
+    final bool isCancelled;
+    final String? workoutPlanName;
 
-  UserProfile({
-    required this.id,
-    required this.interestedWorkout,
-    required this.fitnessLevel,
-    required this.dietaryPreferences,
-    required this.weight,
-  });
+    Plan({
+        required this.id,
+        this.mealPlanName,
+        required this.tags,
+        required this.startDate,
+        required this.endDate,
+        required this.isCompleted,
+        required this.isCancelled,
+        this.workoutPlanName,
+    });
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) {
-    return UserProfile(
-      id: json['id'] ?? 0,
-      interestedWorkout: json['interested_workout'] ?? '',
-      fitnessLevel: json['fitness_level'] ?? '',
-      dietaryPreferences: json['dietary_preferences'] ?? '',
-      weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
+    factory Plan.fromRawJson(String str) => Plan.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
+    factory Plan.fromJson(Map<String, dynamic> json) => Plan(
+        id: json["id"],
+        mealPlanName: json["meal_plan_name"],
+        tags: json["tags"],
+        startDate: DateTime.parse(json["start_date"]),
+        endDate: DateTime.parse(json["end_date"]),
+        isCompleted: json["is_completed"],
+        isCancelled: json["is_cancelled"],
+        workoutPlanName: json["workout_plan_name"],
     );
-  }
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "meal_plan_name": mealPlanName,
+        "tags": tags,
+        "start_date": "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
+        "end_date": "${endDate.year.toString().padLeft(4, '0')}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
+        "is_completed": isCompleted,
+        "is_cancelled": isCancelled,
+        "workout_plan_name": workoutPlanName,
+    };
 }
 
-class MealPlan {
-  final int id;
-  final String mealPlanName;
-  final String tags;
-  final String startDate;
-  final String endDate;
-  final bool isCompleted;
-  final bool isCancelled;
+class Profile {
+    final int id;
+    final String interestedWorkout;
+    final String fitnessLevel;
+    final String dietaryPreferences;
+    final double weight;
 
-  MealPlan({
-    required this.id,
-    required this.mealPlanName,
-    required this.tags,
-    required this.startDate,
-    required this.endDate,
-    required this.isCompleted,
-    required this.isCancelled,
-  });
+    Profile({
+        required this.id,
+        required this.interestedWorkout,
+        required this.fitnessLevel,
+        required this.dietaryPreferences,
+        required this.weight,
+    });
 
-  factory MealPlan.fromJson(Map<String, dynamic> json) {
-    return MealPlan(
-      id: json['id'] ?? 0,
-      mealPlanName: json['meal_plan_name'] ?? '',
-      tags: json['tags'] ?? '',
-      startDate: json['start_date'] ?? '',
-      endDate: json['end_date'] ?? '',
-      isCompleted: json['is_completed'] ?? false,
-      isCancelled: json['is_cancelled'] ?? false,
+    factory Profile.fromRawJson(String str) => Profile.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
+    factory Profile.fromJson(Map<String, dynamic> json) => Profile(
+        id: json["id"],
+        interestedWorkout: json["interested_workout"],
+        fitnessLevel: json["fitness_level"],
+        dietaryPreferences: json["dietary_preferences"],
+        weight: json["weight"],
     );
-  }
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "interested_workout": interestedWorkout,
+        "fitness_level": fitnessLevel,
+        "dietary_preferences": dietaryPreferences,
+        "weight": weight,
+    };
 }
-
-class WorkoutPlan {
-  final int id;
-  final String workoutPlanName;
-  final String tags;
-  final String startDate;
-  final String endDate;
-  final bool isCompleted;
-  final bool isCancelled;
-
-  WorkoutPlan({
-    required this.id,
-    required this.workoutPlanName,
-    required this.tags,
-    required this.startDate,
-    required this.endDate,
-    required this.isCompleted,
-    required this.isCancelled,
-  });
-
-  factory WorkoutPlan.fromJson(Map<String, dynamic> json) {
-    return WorkoutPlan(
-      id: json['id'] ?? 0,
-      workoutPlanName: json['workout_plan_name'] ?? '',
-      tags: json['tags'] ?? '',
-      startDate: json['start_date'] ?? '',
-      endDate: json['end_date'] ?? '',
-      isCompleted: json['is_completed'] ?? false,
-      isCancelled: json['is_cancelled'] ?? false,
-    );
-  }
-} 

@@ -110,7 +110,7 @@ class WorkOutDropdownField extends StatelessWidget {
         if (label.isNotEmpty)
           Padding(
             // Replaced 4.w, 4.h
-            padding: EdgeInsets.only(left: 4.0, bottom: 4.0),
+            padding: EdgeInsets.only(left: 4.0, bottom: 4.0, right: 4.0),
             child: Text(
               label,
               style: TextStyle(
@@ -360,7 +360,30 @@ class WorkOutForm extends StatelessWidget {
             onChanged: (e) => controller.routineDuration = e ?? "",
           ),
           SizedBox(height: 48.0),
-
+          Row(
+            spacing: defaultPadding,
+            children: [
+              Expanded(
+                child: primaryFilledButton(
+                  onTap: () {
+                    controller.toggleStep(1);
+                  },
+                  title: "Previous",
+                  isEnable: true,
+                  bg: customGreyText,
+                ),
+              ),
+              Expanded(
+                child: primaryFilledButton(
+                  onTap: () {
+                    controller.toggleStep(3);
+                  },
+                  title: "Next",
+                  isEnable: true,
+                ),
+              ),
+            ],
+          ),
           vPad35,
         ],
       ),

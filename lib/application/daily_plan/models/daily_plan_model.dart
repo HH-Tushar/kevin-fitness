@@ -36,9 +36,9 @@ class DailyPlans {
 
 class AiRecomended {
   final double waterNeedLitersPerDay;
-  final int sleepNeedHoursPerDay;
+  final double sleepNeedHoursPerDay;
   final int totalCaloriesPerDay;
-  final int perfectWeightKg;
+  final double perfectWeightKg;
 
   AiRecomended({
     required this.waterNeedLitersPerDay,
@@ -152,7 +152,7 @@ class DailyWorkout {
 
 class DailyWorkoutEntry {
   final int id;
-  final String workoutName;
+  final String? workoutName;
   final int setOf;
   final int reps;
   bool completed;

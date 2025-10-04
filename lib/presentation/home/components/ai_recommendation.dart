@@ -5,6 +5,7 @@ part of '../home_screen.dart';
 class _MotivationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+        final DailyPlanProvider planProvider = context.watch();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Stack(
@@ -68,6 +69,7 @@ class _CalorieBox extends StatelessWidget {
   const _CalorieBox({this.height = 90});
   @override
   Widget build(BuildContext context) {
+        final DailyPlanProvider planProvider = context.watch();
     return Container(
       height: 80,
       decoration: BoxDecoration(
@@ -108,7 +110,7 @@ class _CalorieBox extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: '800',
+                      text: planProvider.dailyPlan?.aiRecomended.totalCaloriesPerDay.toString()??"",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -169,6 +171,7 @@ class _SleepBox extends StatelessWidget {
   const _SleepBox({this.height = 80});
   @override
   Widget build(BuildContext context) {
+     final DailyPlanProvider planProvider = context.watch();
     return Container(
       height: 80,
       decoration: BoxDecoration(
@@ -211,7 +214,7 @@ class _SleepBox extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: '7',
+                      text: planProvider.dailyPlan?.aiRecomended.sleepNeedHoursPerDay.toString()??"",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

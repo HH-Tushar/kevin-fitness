@@ -7,8 +7,48 @@ import '/env.dart';
 import '/common/api_handler.dart';
 import 'package:http/http.dart' as http;
 import 'models/user_credential.dart';
+import 'models/user_profile_model.dart';
+
+class TokenReGen {
+  final String accessToken;
+  final String refreshToken;
+  const TokenReGen({required this.accessToken, required this.refreshToken});
+}
 
 class AuthRepo {
+  Future<Attempt<TokenReGen>> refreshToken({required String refresh}) async {
+    final String url = '$baseUrl/token/refresh/';
+    final Map<String, String> body = {"refresh": refresh};
+    final Map<String, String> headers = {"Content-Type": "application/json"};
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return success(
+          TokenReGen(
+            accessToken: body["access"],
+            refreshToken: body["refresh"],
+          ),
+        );
+      } else if (response.statusCode == 401) {
+        return failed(Failure(title: "Invalid Email or Password"));
+      } else {
+        throw Exception('Failed to log in: ${response.body}');
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      dPrint(e.toString());
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
+
   Future<Attempt<UserCredential>> login({
     required String email,
     required String password,
@@ -166,7 +206,7 @@ class AuthRepo {
     required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/profile/get_profile_$language/';
+    final String url = '$baseUrl/profile/get_profile_english/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -182,6 +222,41 @@ class AuthRepo {
       if (response.statusCode == 200) {
         // If the server responds with a 200 OK, parse the response
         return success(UserProfile.fromJson(json.decode(response.body)));
+      } else if (response.statusCode == 401) {
+        return failed(Failure(title: "Invalid Email or Password"));
+      } else {
+        throw Exception('Failed to log in: ${response.body}');
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      dPrint(e.toString());
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
+
+  Future<Attempt<UserInfo>> getUserInfo({
+    required String token,
+    required String language,
+  }) async {
+    final String url = '$baseUrl/userapi/user/info/';
+
+    // Set the headers for the request
+    final Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    };
+
+    try {
+      // Send the POST request
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+      // Check the status of the response
+      if (response.statusCode == 200) {
+        // If the server responds with a 200 OK, parse the response
+        return success(UserInfo.fromJson(json.decode(response.body)));
       } else if (response.statusCode == 401) {
         return failed(Failure(title: "Invalid Email or Password"));
       } else {

@@ -1,5 +1,5 @@
 abstract class WorkoutPlanTranslation {
-  String get title;
+  String get workoutPlan;
   String get duration;
   String get minutes;
   String get generatePlan;
@@ -35,7 +35,7 @@ abstract class WorkoutPlanTranslation {
 
 class WorkoutPlanEnglish implements WorkoutPlanTranslation {
   @override
-  String get title => "Workout Plan";
+  String get workoutPlan => "Workout Plan";
   @override
   String get duration => "Duration";
   @override
@@ -104,7 +104,7 @@ class WorkoutPlanEnglish implements WorkoutPlanTranslation {
 
 class WorkoutPlanSpanish implements WorkoutPlanTranslation {
   @override
-  String get title => "Plan de Ejercicio";
+  String get workoutPlan => "Plan de Ejercicio";
   @override
   String get duration => "Duración";
   @override

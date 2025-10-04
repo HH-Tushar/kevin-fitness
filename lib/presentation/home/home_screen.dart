@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:kenvinorellana/application/auth/auth_controller.dart';
 import 'package:kenvinorellana/common/navigator.dart';
-import '../meal_track/meal_track.dart';
-import '../workout_track/workout_track.dart';
+import 'package:kenvinorellana/presentation/auth/view/login_screen.dart';
+import 'package:kenvinorellana/providers/daily_plan_provider.dart';
+import 'package:kenvinorellana/translation/localization.dart';
+import 'package:provider/provider.dart';
+import '../meal_track/daily_track/meal_track.dart';
+import '../workout_track/daily_track/workout_track.dart';
 import '/common/gaps.dart';
 import '../../common/colors.dart';
 import 'package:lottie/lottie.dart';
@@ -17,6 +22,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DailyPlanProvider planProvider = context.watch();
     final double boxHeight = 90;
     final double boxSpacing = 12;
     return Scaffold(
@@ -113,6 +119,8 @@ class HomeScreen extends StatelessWidget {
 class _HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final LanguageProvider lan = context.watch();
+    final AuthController authController = context.watch();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -180,138 +188,19 @@ class _HomeHeader extends StatelessWidget {
             ),
           ),
           SizedBox(width: 12),
+          IconButton(
+            onPressed: () async {
+              final dd = await authController.logout();
+              if (dd) {
+                navigateReplaceAll(context, LoginScreen());
+              }
+            },
+            icon: Icon(Icons.login),
+          ),
 
-          CircleAvatar(),
+          InkWell(child: CircleAvatar(), onTap: () => lan.toggleLanguage()),
         ],
       ),
     );
   }
 }
-
-// // --- Weekly Goal Section ---
-// class _WeeklyGoalSection extends StatefulWidget {
-//   @override
-//   State<_WeeklyGoalSection> createState() => _WeeklyGoalSectionState();
-// }
-
-// class _WeeklyGoalSectionState extends State<_WeeklyGoalSection> {
-//   DateTime _focusedDay = DateTime.now();
-//   DateTime? _selectedDay;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _selectedDay = _focusedDay;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 20),
-//       child: Container(
-//         width: double.infinity,
-//         padding: EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-//         decoration: BoxDecoration(
-//           color: const Color(0xFF2D393A),
-//           borderRadius: BorderRadius.circular(8),
-//           boxShadow: [
-//             BoxShadow(
-//               color: const Color(0x26000000),
-//               blurRadius: 4,
-//               offset: const Offset(0, 2),
-//             ),
-//           ],
-//         ),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Row(
-//               children: [
-//                 Text(
-//                   'Weekly Goal',
-//                   style: TextStyle(
-//                     color: Colors.white,
-//                     fontSize: 17,
-//                     fontFamily: 'Outfit',
-//                     fontWeight: FontWeight.w600,
-//                   ),
-//                 ),
-//                 const Spacer(),
-//                 Text(
-//                   '1 / 3',
-//                   style: TextStyle(
-//                     color: const Color(0xFF263133),
-//                     fontSize: 17,
-//                     fontFamily: 'Outfit',
-//                     fontWeight: FontWeight.w400,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             SizedBox(height: 12),
-//             TableCalendar(
-//               firstDay: DateTime.utc(2020, 1, 1),
-//               lastDay: DateTime.utc(2030, 12, 31),
-//               focusedDay: _focusedDay,
-//               selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-//               calendarFormat: CalendarFormat.week,
-//               availableCalendarFormats: const {CalendarFormat.week: 'Week'},
-//               headerVisible: false,
-//               daysOfWeekVisible: false,
-//               rowHeight: 150,
-//               calendarStyle: CalendarStyle(
-//                 outsideDaysVisible: false,
-//                 cellMargin: EdgeInsets.zero,
-//                 cellPadding: EdgeInsets.zero,
-//               ),
-//               calendarBuilders: CalendarBuilders(
-//                 defaultBuilder: (context, day, focusedDay) {
-//                   final isSelected = isSameDay(_selectedDay, day);
-//                   return Center(
-//                     child: Column(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: [
-//                         Center(
-//                           child: Text(
-//                             day.day.toString(),
-//                             style: TextStyle(
-//                               color: Colors.white,
-//                               fontSize: 15,
-//                               fontFamily: 'Outfit',
-//                               fontWeight: FontWeight.w400,
-//                             ),
-//                           ),
-//                         ),
-//                         SizedBox(height: 20),
-//                         Text(
-//                           _getWeekdayLabel(day),
-//                           style: TextStyle(
-//                             color: Colors.white,
-//                             fontSize: 13,
-//                             fontFamily: 'Outfit',
-//                             fontWeight: FontWeight.w400,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   );
-//                 },
-//               ),
-//               onDaySelected: (selectedDay, focusedDay) {
-//                 setState(() {
-//                   // _selectedDay = selectedDay;
-//                   // _focusedDay = focusedDay;
-//                 });
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   String _getWeekdayLabel(DateTime day) {
-//     const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-//     return labels[day.weekday % 7];
-//   }
-// }

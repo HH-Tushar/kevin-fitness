@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kenvinorellana/common/navigator.dart';
+import 'package:kenvinorellana/presentation/landing/landing.dart';
 
 class BasicInfoController extends ChangeNotifier {
   int step = 0;
@@ -20,9 +22,58 @@ class BasicInfoController extends ChangeNotifier {
   String? routineDuration;
   List<String> subOptions = [];
   List<String> whereTrainSub = [];
+  //preferences
+  String dietaryPref = 'No preferences';
+  List<String> allergies = [];
+  List<String> foodPref = [];
+  List<String> medicalCond = [];
+  List<String> fitnessGoals = [];
+  String lifestyleHabits = '3 Meals';
+  bool isLoading = false;
 
   void updateTrainingInstruments(List<String> e) {
     whereTrainSub = e;
+    notify();
+  }
+
+  void setDietaryPref(List<String> v) {
+    dietaryPref = v.first;
+    notify();
+  }
+
+  void setAllergies(List<String> v) {
+    // Logic to ensure 'No allergies' is exclusive
+    if (v.contains('No allergies') && v.length > 1) {
+      allergies = ['No allergies'];
+    } else if (v.contains('No allergies') &&
+        v.length == 1 &&
+        v.first == 'No allergies') {
+      allergies = v;
+    } else if (v.contains('No allergies') && v.length == 0) {
+      allergies = []; // Should not happen with current card logic
+    } else {
+      allergies = v.where((element) => element != 'No allergies').toList();
+    }
+    notify();
+  }
+
+  void setFoodPref(List<String> v) {
+    foodPref = v;
+    notify();
+  }
+
+  void setMedicalCond(List<String> v) {
+    medicalCond = v;
+    notify();
+  }
+
+  void setFitnessGoals(List<String> v) {
+    fitnessGoals = v;
+    notify();
+  }
+
+  void setLifestyleHabits(List<String> v) {
+    lifestyleHabits = v.first;
     notify();
   }
 
@@ -64,6 +115,12 @@ class BasicInfoController extends ChangeNotifier {
   toggleStep(int val) {
     step = val;
     notify();
+  }
+
+  Future<void> uploadDetails(BuildContext context) async {
+    //api call
+
+    animatedNavigateReplaceAll(context, LandingView());
   }
 
   void notify() {

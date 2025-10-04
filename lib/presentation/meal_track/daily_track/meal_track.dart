@@ -45,20 +45,20 @@ class MealPlanDayScreen extends StatelessWidget {
             ),
           ),
 
-          Positioned(
-            left: 0,
-            top: 48,
-            child: IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-            ),
-          ),
+          // Positioned(
+          //   left: 0,
+          //   top: 48,
+          //   child: IconButton(
+          //     onPressed: () => Navigator.of(context).pop(),
+          //     icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
+          //   ),
+          // ),
           // Day title
           Positioned(
             left: 30,
             top: 155,
             child: Text(
-              'Day $day',
+              'Todays Meal Plan',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,

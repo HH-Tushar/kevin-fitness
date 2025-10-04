@@ -1,32 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:kenvinorellana/application/auth/auth_controller.dart';
 
 import 'package:kenvinorellana/presentation/home/home_screen.dart';
+import 'package:kenvinorellana/providers/daily_plan_provider.dart';
+import 'package:kenvinorellana/translation/localization.dart';
+import 'package:provider/provider.dart';
 
-class LandingView extends StatefulWidget {
+import '../home/home_controller.dart';
+import '../meal_track/daily_track/meal_track.dart';
+import '../plan_generator/ai_gen_landing/plan_generator.dart';
+import '../workout_track/daily_track/workout_track.dart';
+part 'controller.dart';
+
+class LandingView extends StatelessWidget {
   const LandingView({super.key});
 
   @override
-  State<LandingView> createState() => _LandingViewState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => _LandingController(context: context),
+      child: _Layout(),
+    );
+  }
 }
 
-class _LandingViewState extends State<LandingView> {
-  int index = 0;
-  changeIndex(int val) {
-    setState(() {
-      index = val;
-    });
-  }
+class _Layout extends StatelessWidget {
+  const _Layout({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final _LandingController controller = context.watch();
     return Scaffold(
-      body: HomeScreen(),
+      body: controller.children[controller.index],
 
       bottomNavigationBar: CustomBottomNavBar(
         onTap: (e) {
-          changeIndex(e);
+          controller.changeIndex(e);
         },
-        selectedIndex: index,
+        selectedIndex: controller.index,
       ),
     );
   }

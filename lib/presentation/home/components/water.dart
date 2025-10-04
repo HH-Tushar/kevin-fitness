@@ -1,4 +1,5 @@
 part of '../home_screen.dart';
+
 // --- Water Box with fl_chart (Fixed RenderFlex overflow) ---
 class _WaterBox extends StatelessWidget {
   final double height;
@@ -62,12 +63,12 @@ class _WaterBox extends StatelessWidget {
           //   ),
           // ),
           // // Header - Fixed layout to prevent overflow
-        
-        
- ClipRRect(
+          ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4), // remove vertical padding
+              padding: EdgeInsets.symmetric(
+                horizontal: 4,
+              ), // remove vertical padding
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Lottie.asset(
@@ -79,7 +80,7 @@ class _WaterBox extends StatelessWidget {
               ),
             ),
           ),
-        
+
           Padding(
             padding: EdgeInsets.only(top: 10, left: 10, right: 10),
             child: Column(
@@ -142,4 +143,3 @@ class _WaterBox extends StatelessWidget {
     );
   }
 }
-
