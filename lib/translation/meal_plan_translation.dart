@@ -35,82 +35,174 @@ abstract class MealPlanTranslation {
   String get despuesDeLaCena;
   String get protein;
   String get time;
+  String get serving;
+  String get min;
+  String get tags;
+  String get makeItHealthy;
 }
 
 class MealPlanEnglish implements MealPlanTranslation {
-  @override String get title => "Meal Plan";
-  @override String get snacks => "Snacks";
-  @override String get days => "Days";
-  @override String get avgCalories => "Average Calories";
-  @override String get totalMeals => "Total Meals";
-  @override String get day => "Day";
-  @override String get kcal => "kcal";
-  @override String get carbs => "Carbs";
-  @override String get fat => "Fat";
-  @override String get ingredients => "Ingredients";
-  @override String get startCooking => "Start Cooking";
-  @override String get today => "Today";
-  @override String get completed => "Completed";
-  @override String get meals => "Meals";
-  @override String get calories => "Calories";
-  @override String get progress => "Progress";
-  @override String get mealCompleted => "Meal completed successfully";
-  @override String get mealUpdated => "Meal status updated successfully";
-  @override String get breakfast => "Breakfast";
-  @override String get lunch => "Lunch";
-  @override String get dinner => "Dinner";
-  @override String get snack => "Snack";
-  @override String get snack1 => "Snack 1";
-  @override String get snack2 => "Snack 2";
-  @override String get snack3 => "Snack 3";
-  @override String get postDinner => "Post Dinner";
-  @override String get desayuno => "Breakfast";
-  @override String get almuerzo => "Lunch";
-  @override String get cena => "Dinner";
-  @override String get merienda => "Snack";
-  @override String get merienda1 => "Snack 1";
-  @override String get merienda2 => "Snack 2";
-  @override String get merienda3 => "Snack 3";
-  @override String get despuesDeLaCena => "Post Dinner";
-  @override String get protein => "Protein";
-  @override String get time => "Time";
+  @override
+  String get title => "Meal Plan";
+  @override
+  String get snacks => "Snacks";
+  @override
+  String get days => "Days";
+  @override
+  String get avgCalories => "Average Calories";
+  @override
+  String get makeItHealthy => "Make it healthy";
+  @override
+  String get totalMeals => "Total Meals";
+  @override
+  String get day => "Day";
+  @override
+  String get kcal => "kcal";
+  @override
+  String get carbs => "Carbs";
+  @override
+  String get fat => "Fat";
+  @override
+  String get ingredients => "Ingredients";
+  @override
+  String get startCooking => "Start Cooking";
+  @override
+  String get today => "Today";
+  @override
+  String get completed => "Completed";
+  @override
+  String get meals => "Meals";
+  @override
+  String get calories => "Calories";
+  @override
+  String get progress => "Progress";
+  @override
+  String get mealCompleted => "Meal completed successfully";
+  @override
+  String get mealUpdated => "Meal status updated successfully";
+  @override
+  String get breakfast => "Breakfast";
+  @override
+  String get lunch => "Lunch";
+  @override
+  String get dinner => "Dinner";
+  @override
+  String get snack => "Snack";
+  @override
+  String get snack1 => "Snack 1";
+  @override
+  String get snack2 => "Snack 2";
+  @override
+  String get snack3 => "Snack 3";
+  @override
+  String get postDinner => "Post Dinner";
+  @override
+  String get desayuno => "Breakfast";
+  @override
+  String get almuerzo => "Lunch";
+  @override
+  String get cena => "Dinner";
+  @override
+  String get merienda => "Snack";
+  @override
+  String get merienda1 => "Snack 1";
+  @override
+  String get merienda2 => "Snack 2";
+  @override
+  String get merienda3 => "Snack 3";
+  @override
+  String get despuesDeLaCena => "Post Dinner";
+  @override
+  String get protein => "Protein";
+  @override
+  String get time => "Time";
+  @override
+  String get serving => "serving";
+  @override
+  String get min => "min";
+    @override
+  String get tags => "Tags";
 }
 
 class MealPlanSpanish implements MealPlanTranslation {
-  @override String get title => "Plan de Comidas";
-  @override String get snacks => "Refrigerios";
-  @override String get days => "Días";
-  @override String get avgCalories => "Promedio Calorías";
-  @override String get totalMeals => "Total comidas";
-  @override String get day => "Día";
-  @override String get kcal => "kcal";
-  @override String get carbs => "Carbohidratos";
-  @override String get fat => "Grasa";
-  @override String get ingredients => "Ingredientes";
-  @override String get startCooking => "Comenzar a Cocinar";
-  @override String get today => "Hoy";
-  @override String get completed => "Completado";
-  @override String get meals => "Comidas";
-  @override String get calories => "Calorías";
-  @override String get progress => "Progreso";
-  @override String get mealCompleted => "Comida completada exitosamente";
-  @override String get mealUpdated => "Estado de la comida actualizado exitosamente";
-  @override String get breakfast => "Desayuno";
-  @override String get lunch => "Almuerzo";
-  @override String get dinner => "Cena";
-  @override String get snack => "Merienda";
-  @override String get snack1 => "Merienda 1";
-  @override String get snack2 => "Merienda 2";
-  @override String get snack3 => "Merienda 3";
-  @override String get postDinner => "Después de la cena";
-  @override String get desayuno => "Desayuno";
-  @override String get almuerzo => "Almuerzo";
-  @override String get cena => "Cena";
-  @override String get merienda => "Merienda";
-  @override String get merienda1 => "Merienda 1";
-  @override String get merienda2 => "Merienda 2";
-  @override String get merienda3 => "Merienda 3";
-  @override String get despuesDeLaCena => "Después de la cena";
-  @override String get protein => "Proteína";
-  @override String get time => "Tiempo";
+  @override
+  String get title => "Plan de Comidas";
+  @override
+  String get makeItHealthy => "Hazlo saludable";
+  @override
+  String get snacks => "Refrigerios";
+  @override
+  String get days => "Días";
+  @override
+  String get avgCalories => "Promedio Calorías";
+  @override
+  String get totalMeals => "Total comidas";
+  @override
+  String get day => "Día";
+  @override
+  String get kcal => "kcal";
+  @override
+  String get carbs => "Carbohidratos";
+  @override
+  String get fat => "Grasa";
+  @override
+  String get ingredients => "Ingredientes";
+  @override
+  String get startCooking => "Comenzar a Cocinar";
+  @override
+  String get today => "Hoy";
+  @override
+  String get completed => "Completado";
+  @override
+  String get meals => "Comidas";
+  @override
+  String get calories => "Calorías";
+  @override
+  String get progress => "Progreso";
+  @override
+  String get mealCompleted => "Comida completada exitosamente";
+  @override
+  String get mealUpdated => "Estado de la comida actualizado exitosamente";
+  @override
+  String get breakfast => "Desayuno";
+  @override
+  String get lunch => "Almuerzo";
+  @override
+  String get dinner => "Cena";
+  @override
+  String get snack => "Merienda";
+  @override
+  String get snack1 => "Merienda 1";
+  @override
+  String get snack2 => "Merienda 2";
+  @override
+  String get snack3 => "Merienda 3";
+  @override
+  String get postDinner => "Después de la cena";
+  @override
+  String get desayuno => "Desayuno";
+  @override
+  String get almuerzo => "Almuerzo";
+  @override
+  String get cena => "Cena";
+  @override
+  String get merienda => "Merienda";
+  @override
+  String get merienda1 => "Merienda 1";
+  @override
+  String get merienda2 => "Merienda 2";
+  @override
+  String get merienda3 => "Merienda 3";
+  @override
+  String get despuesDeLaCena => "Después de la cena";
+  @override
+  String get protein => "Proteína";
+  @override
+  String get time => "Tiempo";
+  @override
+  String get serving => "servicio";
+  @override
+  String get min => "min";
+    @override
+  String get tags => "Tags";
 }

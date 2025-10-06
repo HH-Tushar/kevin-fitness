@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../setting/settings.dart';
 import '/application/auth/auth_controller.dart';
 import '/common/navigator.dart';
 import '/presentation/auth/view/login_screen.dart';
@@ -188,17 +189,21 @@ class _HomeHeader extends StatelessWidget {
             ),
           ),
           SizedBox(width: 12),
-          IconButton(
-            onPressed: () async {
-              final dd = await authController.logout();
-              if (dd) {
-                navigateReplaceAll(context, LoginScreen());
-              }
-            },
-            icon: Icon(Icons.login),
-          ),
 
+          // IconButton(
+          //   onPressed: () async {
+          //     final dd = await authController.logout();
+          //     if (dd) {
+          //       navigateReplaceAll(context, LoginScreen());
+          //     }
+          //   },
+          //   icon: Icon(Icons.login),
+          // ),
           InkWell(child: CircleAvatar(), onTap: () => lan.toggleLanguage()),
+          InkWell(
+            child: CircleAvatar(child: Icon(Icons.person)),
+            onTap: () => animatedNavigateTo(context, ProfileScreen()),
+          ),
         ],
       ),
     );

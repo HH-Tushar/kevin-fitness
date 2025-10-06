@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:kenvinorellana/common/navigator.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -9,6 +9,7 @@ import '../../../../application/daily_plan/models/ai_gen_meals_plan.dart';
 import '../../../../common/colors.dart';
 import '../../../../common/gaps.dart';
 import '../../../../translation/localization.dart';
+import '../../daily_details/Meal_plan_daily.dart';
 part 'components/tiles.dart';
 part 'components/day_tile.dart';
 
@@ -169,9 +170,18 @@ class _AiGenMealsPlanListState extends State<AiGenMealsPlanList> {
                             ? defaultPadding * 2
                             : 0,
                       ),
-                      child: _MealDayCard(
-                        day: aiGeneratedMealPlans!.days[index],
-                        dayNumber: index + 1,
+                      child: GestureDetector(
+                        onTap: () => animatedNavigateTo(
+                          context,
+                          MealPlanDailyView(
+                            day: index + 1,
+                            mealId: aiGeneratedMealPlans!.days[index].id,
+                          ),
+                        ),
+                        child: _MealDayCard(
+                          day: aiGeneratedMealPlans!.days[index],
+                          dayNumber: index + 1,
+                        ),
                       ),
                     ),
                   ),

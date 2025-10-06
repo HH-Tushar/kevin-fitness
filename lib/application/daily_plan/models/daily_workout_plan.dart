@@ -86,6 +86,7 @@ class WorkoutElement {
 
 class Workout {
     final String workoutName;
+    final int ?id;
     final String timeNeeded;
     final String forBodyPart;
     final String workoutType;
@@ -97,6 +98,7 @@ class Workout {
     final String uniqueId;
 
     Workout({
+        this.id,
         required this.workoutName,
         required this.timeNeeded,
         required this.forBodyPart,
@@ -115,6 +117,7 @@ class Workout {
 
     factory Workout.fromJson(Map<String, dynamic> json) => Workout(
         workoutName: json["workout_name"],
+        id: json["id"],
         timeNeeded: json["time_needed"],
         forBodyPart: json["for_body_part"],
         workoutType: json["workout_type"],
