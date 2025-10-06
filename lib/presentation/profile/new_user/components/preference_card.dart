@@ -112,7 +112,7 @@ class PreferenceCard extends StatelessWidget {
                 ),
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

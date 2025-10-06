@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kenvinorellana/common/app_bars.dart';
-import 'package:kenvinorellana/common/custom_buttons.dart';
-import 'package:kenvinorellana/common/gaps.dart';
-import 'package:kenvinorellana/common/navigator.dart';
-import 'package:kenvinorellana/common/snack_bar.dart';
-import 'package:kenvinorellana/presentation/auth/view/login_screen.dart';
+import '/common/app_bars.dart';
+import '/common/custom_buttons.dart';
+import '/common/gaps.dart';
+import '/common/navigator.dart';
+import '/common/snack_bar.dart';
+import '/presentation/auth/view/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../application/auth/auth_repo.dart';
@@ -74,8 +74,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final LanguageProvider translator = context.watch();
-    final authTranslator = translator.authTranslation;
+    // final LanguageProvider translator = context.watch();
+    // final authTranslator = translator.authTranslation;
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: childAppBar(context: context),

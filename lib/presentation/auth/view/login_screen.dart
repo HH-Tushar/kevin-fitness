@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
-import 'package:kenvinorellana/application/auth/auth_controller.dart';
-import 'package:kenvinorellana/common/custom_buttons.dart';
-import 'package:kenvinorellana/common/gaps.dart';
-import 'package:kenvinorellana/common/navigator.dart';
-import 'package:kenvinorellana/common/snack_bar.dart';
-import 'package:kenvinorellana/presentation/auth/view/forgot_password_screen.dart';
-import 'package:kenvinorellana/presentation/auth/view/signup_screen.dart';
-import 'package:kenvinorellana/presentation/home/home_screen.dart';
+import '/application/auth/auth_controller.dart';
+import '/common/custom_buttons.dart';
+import '/common/gaps.dart';
+import '/common/navigator.dart';
+import '/common/snack_bar.dart';
+import '/presentation/auth/view/forgot_password_screen.dart';
+import '/presentation/auth/view/signup_screen.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../common/colors.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kenvinorellana/common/colors.dart';
+
 import 'package:provider/provider.dart';
 
 import 'application/auth/auth_controller.dart';
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
 }
 
 class _Layout extends StatelessWidget {
-  const _Layout({super.key});
+  const _Layout();
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:kenvinorellana/common/gaps.dart';
-import 'package:kenvinorellana/common/navigator.dart';
-import 'package:kenvinorellana/translation/localization.dart';
+import '/common/gaps.dart';
+import '/common/navigator.dart';
+import '/translation/localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../../application/auth/auth_controller.dart';
@@ -361,20 +361,20 @@ class _AIWorkoutPlanCard extends StatelessWidget {
             vPad10,
             Row(
               children: [
-                if (workoutPlan != null) ...[
-                  Text(
-                    '${_calculateDays(workoutPlan!.startDate.toString(), workoutPlan!.endDate.toString())} ${planGen.days}',
-                    style: TextStyle(
-                      color: Color(0xFF6FE3C1),
-                      fontSize: 13,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                ],
+                ...[
                 Text(
-                  workoutPlan?.tags.split(',').first.trim() ?? planGen.noTags,
+                  '${_calculateDays(workoutPlan.startDate.toString(), workoutPlan.endDate.toString())} ${planGen.days}',
+                  style: TextStyle(
+                    color: Color(0xFF6FE3C1),
+                    fontSize: 13,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(width: 12),
+              ],
+                Text(
+                  workoutPlan.tags.split(',').first.trim(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 13,
@@ -393,9 +393,7 @@ class _AIWorkoutPlanCard extends StatelessWidget {
                     .map((tag) => _Tag(text: tag.trim()))
                     .toList(),
               ),
-            ] else ...[
-              Wrap(spacing: 8, children: [_Tag(text: planGen.noWorkoutPlan)]),
-            ],
+            ]
           ],
         ),
       ),
@@ -486,7 +484,7 @@ class _AIDietPlanCard extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: mealPlan?.isCancelled == true
+                          color: mealPlan.isCancelled == true
                               ? Colors.red
                               : Color(0xFF6FE3C1),
                           borderRadius: BorderRadius.circular(12),
@@ -518,20 +516,20 @@ class _AIDietPlanCard extends StatelessWidget {
             SizedBox(height: 8),
             Row(
               children: [
-                if (mealPlan != null) ...[
-                  Text(
-                    '${_calculateDays(mealPlan.startDate.toString(), mealPlan.endDate.toString())} ${planGen.days}',
-                    style: TextStyle(
-                      color: Color(0xFFB16EFF),
-                      fontSize: 13,
-                      fontFamily: 'Outfit',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                ],
+                ...[
                 Text(
-                  mealPlan?.tags.split(',').first.trim() ?? planGen.noTags,
+                  '${_calculateDays(mealPlan.startDate.toString(), mealPlan.endDate.toString())} ${planGen.days}',
+                  style: TextStyle(
+                    color: Color(0xFFB16EFF),
+                    fontSize: 13,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(width: 12),
+              ],
+                Text(
+                  mealPlan.tags.split(',').first.trim(),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 13,
@@ -542,17 +540,15 @@ class _AIDietPlanCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 10),
-            if (mealPlan != null) ...[
-              Wrap(
-                spacing: 8,
-                children: mealPlan!.tags
-                    .split(',')
-                    .map((tag) => _Tag(text: tag.trim()))
-                    .toList(),
-              ),
-            ] else ...[
-              Wrap(spacing: 8, children: [_Tag(text: planGen.noMealPlan)]),
-            ],
+            ...[
+            Wrap(
+              spacing: 8,
+              children: mealPlan.tags
+                  .split(',')
+                  .map((tag) => _Tag(text: tag.trim()))
+                  .toList(),
+            ),
+          ] 
           ],
         ),
       ),

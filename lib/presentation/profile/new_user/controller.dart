@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kenvinorellana/common/navigator.dart';
-import 'package:kenvinorellana/presentation/landing/landing.dart';
+import '/common/navigator.dart';
+import '/presentation/landing/landing.dart';
 
 class BasicInfoController extends ChangeNotifier {
   int step = 0;
@@ -49,7 +49,7 @@ class BasicInfoController extends ChangeNotifier {
         v.length == 1 &&
         v.first == 'No allergies') {
       allergies = v;
-    } else if (v.contains('No allergies') && v.length == 0) {
+    } else if (v.contains('No allergies') && v.isEmpty) {
       allergies = []; // Should not happen with current card logic
     } else {
       allergies = v.where((element) => element != 'No allergies').toList();

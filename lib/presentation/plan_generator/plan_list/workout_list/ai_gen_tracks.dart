@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kenvinorellana/application/auth/auth_controller.dart';
-import 'package:kenvinorellana/common/app_bars.dart';
-import 'package:kenvinorellana/translation/localization.dart';
+import 'package:kenvinorellana/common/navigator.dart';
+import '../../daily_details/workout_daily_details.dart';
+import '/application/auth/auth_controller.dart';
+import '/translation/localization.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 

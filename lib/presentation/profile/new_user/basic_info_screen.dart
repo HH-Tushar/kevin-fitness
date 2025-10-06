@@ -30,7 +30,7 @@ class BasicInfoScreen extends StatelessWidget {
 }
 
 class _Layout extends StatelessWidget {
-  const _Layout({super.key});
+  const _Layout();
 
   @override
   Widget build(BuildContext context) {

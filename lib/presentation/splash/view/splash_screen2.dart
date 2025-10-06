@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kenvinorellana/common/colors.dart';
-import 'package:kenvinorellana/common/gaps.dart';
-import 'package:kenvinorellana/common/navigator.dart';
+import '/common/colors.dart';
+import '/common/navigator.dart';
 
 import '../../../common/custom_buttons.dart';
-
-import 'package:go_router/go_router.dart';
 
 import '../../auth/view/login_screen.dart';
 

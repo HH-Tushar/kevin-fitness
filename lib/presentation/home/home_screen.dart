@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:kenvinorellana/application/auth/auth_controller.dart';
-import 'package:kenvinorellana/common/navigator.dart';
-import 'package:kenvinorellana/presentation/auth/view/login_screen.dart';
-import 'package:kenvinorellana/providers/daily_plan_provider.dart';
-import 'package:kenvinorellana/translation/localization.dart';
+
+import '/application/auth/auth_controller.dart';
+import '/common/navigator.dart';
+import '/presentation/auth/view/login_screen.dart';
+import '/providers/daily_plan_provider.dart';
+import '/translation/localization.dart';
 import 'package:provider/provider.dart';
 import '../meal_track/daily_track/meal_track.dart';
 import '../workout_track/daily_track/workout_track.dart';

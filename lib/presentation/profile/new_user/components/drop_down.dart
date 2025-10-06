@@ -30,7 +30,7 @@ class ProfileDropdownField extends StatelessWidget {
           SizedBox(width: 10.0),
           Expanded(
             child: DropdownButtonFormField<String>(
-              value: value.isEmpty ? null : value,
+              initialValue: value.isEmpty ? null : value,
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: TextStyle(

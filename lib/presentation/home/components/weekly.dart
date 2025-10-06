@@ -153,41 +153,43 @@ class WeeklyCalendarWidget extends StatelessWidget {
   }
 }
 
-// Usage Example
-class WeeklyCalendarDemo extends StatefulWidget {
-  @override
-  _WeeklyCalendarDemoState createState() => _WeeklyCalendarDemoState();
-}
+// // Usage Example
+// class WeeklyCalendarDemo extends StatefulWidget {
+//   const WeeklyCalendarDemo({super.key});
 
-class _WeeklyCalendarDemoState extends State<WeeklyCalendarDemo> {
-  DateTime selectedDate = DateTime.now();
+//   @override
+//   _WeeklyCalendarDemoState createState() => _WeeklyCalendarDemoState();
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        title: Text('Weekly Calendar'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            WeeklyCalendarWidget(selectedDate: selectedDate),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  selectedDate = DateTime.now();
-                });
-              },
-              child: Text('Reset to Today'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class _WeeklyCalendarDemoState extends State<WeeklyCalendarDemo> {
+//   DateTime selectedDate = DateTime.now();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.grey[100],
+//       appBar: AppBar(
+//         title: Text('Weekly Calendar'),
+//         backgroundColor: Colors.transparent,
+//         elevation: 0,
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           children: [
+//             WeeklyCalendarWidget(selectedDate: selectedDate),
+//             const SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () {
+//                 setState(() {
+//                   selectedDate = DateTime.now();
+//                 });
+//               },
+//               child: Text('Reset to Today'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

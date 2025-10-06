@@ -71,7 +71,7 @@ class _MealListView extends StatelessWidget {
     },
   ];
 
-  const _MealListView({super.key, required this.query});
+  const _MealListView({required this.query});
 
   @override
   Widget build(BuildContext context) {

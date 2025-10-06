@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -7,7 +7,6 @@ import '../../../../application/auth/auth_controller.dart';
 import '../../../../application/daily_plan/daily_plan_repo.dart';
 import '../../../../application/daily_plan/models/ai_gen_meals_plan.dart';
 import '../../../../common/colors.dart';
-import '../../../../common/formater.dart';
 import '../../../../common/gaps.dart';
 import '../../../../translation/localization.dart';
 part 'components/tiles.dart';

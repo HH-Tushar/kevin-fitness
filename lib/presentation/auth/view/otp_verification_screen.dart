@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kenvinorellana/common/app_bars.dart';
+import '/common/app_bars.dart';
 
-import 'package:kenvinorellana/common/custom_buttons.dart';
-import 'package:kenvinorellana/common/navigator.dart';
+import '/common/custom_buttons.dart';
+import '/common/navigator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 import '../../../application/auth/auth_repo.dart';
@@ -10,7 +10,7 @@ import '../../../common/gaps.dart';
 import '../../../common/snack_bar.dart';
 import '../../../translation/localization.dart';
 import '/common/colors.dart';
-import 'forgot_password_screen.dart';
+
 import 'reset_password_screen.dart';
 
 class VerifyOtpView extends StatefulWidget {

@@ -54,7 +54,7 @@ class _ExerciseListView extends StatelessWidget {
     },
   ];
 
-  const _ExerciseListView({super.key, required this.query});
+  const _ExerciseListView({ required this.query});
 
   @override
   Widget build(BuildContext context) {
