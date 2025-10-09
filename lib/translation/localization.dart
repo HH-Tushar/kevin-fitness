@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'ai_screen_translation.dart';
 import 'auth_translation.dart';
 import 'basic_translation.dart';
+import 'feedback_translation.dart';
+import 'home_translation.dart';
 import 'meal_plan_translation.dart';
+import 'profile_translation.dart';
+import 'setting_translation.dart';
+import 'upgrade_plan_translation.dart';
 import 'workout_plan_transaltoin.dart';
 
 class LanguageProvider with ChangeNotifier {
@@ -13,8 +18,11 @@ class LanguageProvider with ChangeNotifier {
 
   String get currentLanguage => _isEnglish ? "english" : "spanish";
 
-  void toggleLanguage() {
-    _isEnglish = !_isEnglish;
+  void toggleLanguage(bool changeToEng) {
+    if (changeToEng == true && _isEnglish == true) {
+      return;
+    }
+    _isEnglish = changeToEng;
     notifyListeners();
   }
 
@@ -28,6 +36,16 @@ class LanguageProvider with ChangeNotifier {
       _isEnglish ? WorkoutPlanEnglish() : WorkoutPlanSpanish();
   MealPlanTranslation get mealPlanTranslation =>
       _isEnglish ? MealPlanEnglish() : MealPlanSpanish();
+  SettingTranslation get settingTranslation =>
+      _isEnglish ? SettingEnglish() : SettingSpanish();
+  UpgradePlanTranslation get upgradePlanTranslation =>
+      _isEnglish ?UpgradePlanEnglish() :UpgradePlanSpanish();
+  ProfileUpdateTranslation get profileUpdateTranslation =>
+      _isEnglish ?ProfileUpdateEnglish() :ProfileUpdateSpanish();
+  HomeTranslation get homeTranslation =>
+      _isEnglish ?HomeEnglish() :HomeSpanish();
+  FeedbackTranslation get feedbackTranslation =>
+      _isEnglish ?FeedbackEnglish() :FeedbackSpanish();
 
   // Add other translation getters here
 }

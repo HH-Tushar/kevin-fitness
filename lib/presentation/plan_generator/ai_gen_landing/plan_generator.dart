@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:kenvinorellana/presentation/feedback/feedback_view.dart';
 import '/common/gaps.dart';
 import '/common/navigator.dart';
 import '/translation/localization.dart';
@@ -24,116 +25,153 @@ class PlanGeneratorView extends StatelessWidget {
 
     return Scaffold(
       // appBar: AppBar(centerTitle: true,title: Text("KEVIN"),),
-      body: Stack(
-        children: [
-          Image.asset(
-            "assets/images/ai_recommended_bg.png",
-            height: double.infinity,
-            width: double.infinity,
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/ai_recommended_bg.png"),
             fit: BoxFit.cover,
           ),
-          //bg image here
-          Positioned.fill(
-            child: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-                child: Column(
-                  children: [
-                    Text(
-                      'KEVIN ORELLANA',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w400,
-                        letterSpacing: 4.0,
-                      ),
-                    ),
-                    Text(
-                      "Your personal trainer & nutritionist",
-                      style: TextStyle(
-                        color: const Color(0xFFA0A0A6),
-                        fontSize: 13,
-                        fontFamily: 'Outfit',
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
+        ),
 
-                    vPad20,
-
-                    _ProfileSection(),
-
-                    vPad20,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 20,
-                      children: [
-                        _OutlinedFeatureButton(
-                          icon: Icons.fitness_center,
-                          iconBg: const Color(0xFF6F1877),
-                          label: planGen.aiWorkoutPlan,
-                          onTap: () {
-                            // context.push('/ai-workout-plan?fromRecommended=false').then((_) {
-                            //   // Trigger API call when returning from AI workout plan screen
-                            //   _refreshData();
-                            // });
-                          },
-                        ),
-
-                        _OutlinedFeatureButton(
-                          icon: Icons.restaurant,
-                          iconBg: const Color(0xFF134E48),
-                          label: planGen.aiDietPlan,
-                          // onTap: isLoading
-                          //     ? null
-                          //     : () {
-                          //         _generateMealPlan();
-                          //       },
-                          isLoading: false,
-                        ),
-                      ],
-                    ),
-
-                    vPad20,
-
-                    // userInfo.workoutPlans.isNotEmpty &&
-                    //         userInfo.workoutPlans.first.isCompleted == true
-                    //     ? _AIWorkoutPlanCard(
-                    //         workoutPlan: userInfo.workoutPlans.first,
-                    //         onFeedbackTap: () => _navigateToFeedback(
-                    //           workoutPlanId: userInfo.workoutPlans.first.id,
-                    //         ),
-                    //       )
-                    //     : GestureDetector(
-                    //         //  onTap: () => _navigateToWorkoutPlan(),
-                    //         child: _AIWorkoutPlanCard(
-                    //           workoutPlan: userInfo.workoutPlans.isNotEmpty
-                    //               ? userInfo.workoutPlans.first
-                    //               : null,
-                    //           onFeedbackTap: () => _navigateToFeedback(
-                    //             workoutPlanId: userInfo.workoutPlans.isNotEmpty
-                    //                 ? userInfo.workoutPlans.first.id
-                    //                 : null,
-                    //           ),
-                    //         ),
-                    //       ),
-                    (userInfo != null && userInfo.mealPlans.isNotEmpty)
-                        ? _AIDietPlanCard(mealPlan: userInfo.mealPlans.first)
-                        : SizedBox(),
-
-                    vPad20,
-                    (userInfo != null && userInfo.workoutPlans.isNotEmpty)
-                        ? _AIWorkoutPlanCard(
-                            workoutPlan: userInfo.workoutPlans.first,
-                          )
-                        : SizedBox(),
-                  ],
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+            child: Column(
+              children: [
+                Text(
+                  'KEVIN ORELLANA',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 4.0,
+                  ),
                 ),
-              ),
+                Text(
+                  "Your personal trainer & nutritionist",
+                  style: TextStyle(
+                    color: const Color(0xFFA0A0A6),
+                    fontSize: 13,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+
+                vPad20,
+
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      await authController.fetchUserInfo();
+                    },
+                    child: SingleChildScrollView(
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          await authController.fetchUserInfo();
+                        },
+                        child: Column(
+                          children: [
+                            _ProfileSection(),
+
+                            vPad20,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 20,
+                              children: [
+                                _OutlinedFeatureButton(
+                                  icon: Icons.fitness_center,
+                                  iconBg: const Color(0xFF6F1877),
+                                  label: planGen.aiWorkoutPlan,
+                                  onTap: () {},
+                                ),
+
+                                _OutlinedFeatureButton(
+                                  icon: Icons.restaurant,
+                                  iconBg: const Color(0xFF134E48),
+                                  label: planGen.aiDietPlan,
+                                  onTap: () {},
+                                  isLoading: false,
+                                ),
+                              ],
+                            ),
+
+                            vPad20,
+
+                            (userInfo != null && userInfo.mealPlans.isNotEmpty)
+                                ? _AIDietPlanCard(
+                                    mealPlan: userInfo.mealPlans.first,
+                                    onFeedbackTap: () {
+                                      animatedNavigateTo(
+                                        context,
+                                        FeedbackView(),
+                                      );
+                                    },
+                                  )
+                                : SizedBox(),
+
+                            vPad20,
+                            (userInfo != null &&
+                                    userInfo.workoutPlans.isNotEmpty)
+                                ? _AIWorkoutPlanCard(
+                                    workoutPlan: userInfo.workoutPlans.first,
+                                    onFeedbackTap: () {
+                                      animatedNavigateTo(
+                                        context,
+                                        FeedbackView(),
+                                      );
+                                    },
+                                  )
+                                : SizedBox(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // userInfo.workoutPlans.isNotEmpty &&
+                //         userInfo.workoutPlans.first.isCompleted == true
+                //     ? _AIWorkoutPlanCard(
+                //         workoutPlan: userInfo.workoutPlans.first,
+                //         onFeedbackTap: () => _navigateToFeedback(
+                //           workoutPlanId: userInfo.workoutPlans.first.id,
+                //         ),
+                //       )
+                //     : GestureDetector(
+                //         //  onTap: () => _navigateToWorkoutPlan(),
+                //         child: _AIWorkoutPlanCard(
+                //           workoutPlan: userInfo.workoutPlans.isNotEmpty
+                //               ? userInfo.workoutPlans.first
+                //               : null,
+                //           onFeedbackTap: () => _navigateToFeedback(
+                //             workoutPlanId: userInfo.workoutPlans.isNotEmpty
+                //                 ? userInfo.workoutPlans.first.id
+                //                 : null,
+                //           ),
+                //         ),
+                //       ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
+
+      // body: Stack(
+      //   children: [
+      //     Image.asset(
+      //       "assets/images/ai_recommended_bg.png",
+      //       height: double.infinity,
+      //       width: double.infinity,
+      //       fit: BoxFit.cover,
+      //     ),
+      //     //bg image here
+      //     Positioned.fill(
+      //   ),
+      //   ],
+      // ),
     );
   }
 }
@@ -265,10 +303,12 @@ class _AIWorkoutPlanCard extends StatelessWidget {
     final LanguageProvider languageProvider = context.watch();
     final planGen = languageProvider.aiScreenTranslation;
     return GestureDetector(
-      onTap: () => animatedNavigateTo(
-        context,
-        AiGenWorkOutPlansList(planId: workoutPlan.id),
-      ),
+      onTap: () => workoutPlan.isCompleted || workoutPlan.isCancelled
+          ? null
+          : animatedNavigateTo(
+              context,
+              AiGenWorkOutPlansList(planId: workoutPlan.id),
+            ),
       child: Container(
         // width: 358,
         padding: EdgeInsets.all(18),
@@ -300,7 +340,7 @@ class _AIWorkoutPlanCard extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                workoutPlan?.isCompleted == true
+                workoutPlan.isCompleted == true
                     ? GestureDetector(
                         onTap: onFeedbackTap,
                         child: Container(
@@ -362,17 +402,17 @@ class _AIWorkoutPlanCard extends StatelessWidget {
             Row(
               children: [
                 ...[
-                Text(
-                  '${_calculateDays(workoutPlan.startDate.toString(), workoutPlan.endDate.toString())} ${planGen.days}',
-                  style: TextStyle(
-                    color: Color(0xFF6FE3C1),
-                    fontSize: 13,
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    '${_calculateDays(workoutPlan.startDate.toString(), workoutPlan.endDate.toString())} ${planGen.days}',
+                    style: TextStyle(
+                      color: Color(0xFF6FE3C1),
+                      fontSize: 13,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                SizedBox(width: 12),
-              ],
+                  SizedBox(width: 12),
+                ],
                 Text(
                   workoutPlan.tags.split(',').first.trim(),
                   style: TextStyle(
@@ -393,7 +433,7 @@ class _AIWorkoutPlanCard extends StatelessWidget {
                     .map((tag) => _Tag(text: tag.trim()))
                     .toList(),
               ),
-            ]
+            ],
           ],
         ),
       ),
@@ -422,8 +462,12 @@ class _AIDietPlanCard extends StatelessWidget {
     final LanguageProvider languageProvider = context.watch();
     final planGen = languageProvider.aiScreenTranslation;
     return GestureDetector(
-      onTap: () =>
-          animatedNavigateTo(context, AiGenMealsPlanList(planId: mealPlan.id)),
+      onTap: () => mealPlan.isCancelled || mealPlan.isCompleted
+          ? null
+          : animatedNavigateTo(
+              context,
+              AiGenMealsPlanList(planId: mealPlan.id),
+            ),
       child: Container(
         // width: 358,
         padding: EdgeInsets.all(18),
@@ -517,17 +561,17 @@ class _AIDietPlanCard extends StatelessWidget {
             Row(
               children: [
                 ...[
-                Text(
-                  '${_calculateDays(mealPlan.startDate.toString(), mealPlan.endDate.toString())} ${planGen.days}',
-                  style: TextStyle(
-                    color: Color(0xFFB16EFF),
-                    fontSize: 13,
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    '${_calculateDays(mealPlan.startDate.toString(), mealPlan.endDate.toString())} ${planGen.days}',
+                    style: TextStyle(
+                      color: Color(0xFFB16EFF),
+                      fontSize: 13,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                SizedBox(width: 12),
-              ],
+                  SizedBox(width: 12),
+                ],
                 Text(
                   mealPlan.tags.split(',').first.trim(),
                   style: TextStyle(
@@ -541,14 +585,14 @@ class _AIDietPlanCard extends StatelessWidget {
             ),
             SizedBox(height: 10),
             ...[
-            Wrap(
-              spacing: 8,
-              children: mealPlan.tags
-                  .split(',')
-                  .map((tag) => _Tag(text: tag.trim()))
-                  .toList(),
-            ),
-          ] 
+              Wrap(
+                spacing: 8,
+                children: mealPlan.tags
+                    .split(',')
+                    .map((tag) => _Tag(text: tag.trim()))
+                    .toList(),
+              ),
+            ],
           ],
         ),
       ),

@@ -35,7 +35,7 @@ class _LandingController extends ChangeNotifier {
 
   final List<Widget> children = [
     HomeScreen(),
-    Placeholder(),
+    ChatScreen(),
     WorkOutTrackView(),
     PlanGeneratorView(),
     MealPlanDayScreen(),

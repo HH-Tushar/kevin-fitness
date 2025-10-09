@@ -4,15 +4,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kenvinorellana/common/colors.dart';
 import 'package:kenvinorellana/common/gaps.dart';
+import 'package:kenvinorellana/common/navigator.dart';
+import 'package:provider/provider.dart';
+
+import '../../../providers/daily_plan_provider.dart';
+import '../meal_details/meal_details.dart';
 
 part 'components/meal_tile.dart';
 
 class MealPlanDayScreen extends StatelessWidget {
   final int day;
-  const MealPlanDayScreen({super.key, this.day = 3});
+  final bool? shouldPop;
+  const MealPlanDayScreen({super.key, this.day = 3, this.shouldPop});
 
   @override
   Widget build(BuildContext context) {
+    final DailyPlanProvider dailyPlanProvider = context.watch();
     return Scaffold(
       backgroundColor: customGrey,
       body: Stack(
@@ -44,15 +51,15 @@ class MealPlanDayScreen extends StatelessWidget {
               ),
             ),
           ),
-
-          // Positioned(
-          //   left: 0,
-          //   top: 48,
-          //   child: IconButton(
-          //     onPressed: () => Navigator.of(context).pop(),
-          //     icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-          //   ),
-          // ),
+          if (shouldPop == true)
+            Positioned(
+              left: 0,
+              top: 48,
+              child: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
+              ),
+            ),
           // Day title
           Positioned(
             left: 30,
@@ -91,18 +98,6 @@ class MealPlanDayScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  // child: Padding(
-                  //   padding: EdgeInsets.only(top: 33, left: 70, right: 70),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: const [
-                  //       _MacroStat(value: '280g', label: 'Protein'),
-                  //       _MacroStat(value: '35g', label: 'Carbs'),
-                  //       _MacroStat(value: '12g', label: 'Fat'),
-                  //     ],
-                  //   ),
-                  // ),
                   padding: EdgeInsets.symmetric(
                     vertical: 20,
                     horizontal: defaultPadding * 3,
@@ -111,7 +106,7 @@ class MealPlanDayScreen extends StatelessWidget {
                     children: [
                       vPad10,
                       Text(
-                        "20000",
+                        "${dailyPlanProvider.todayMealPlan?.stats.the15DayCompleted.calories.toInt() ?? 0}",
                         style: TextStyle(
                           fontSize: 27,
                           color: customWhite,
@@ -119,7 +114,7 @@ class MealPlanDayScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "of 2000 calories",
+                        "of ${dailyPlanProvider.todayMealPlan?.stats.the15DayTotals.calories.toInt() ?? 0} Calories",
                         style: TextStyle(
                           fontSize: 15,
                           color: customWhite,
@@ -127,34 +122,113 @@ class MealPlanDayScreen extends StatelessWidget {
                         ),
                       ),
                       vPad20,
-                      Stack(
-                        children: [
-                          Container(
-                            height: 10,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: customGreyText,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          Container(
-                            height: 10,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: customTeal,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ],
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final total =
+                              dailyPlanProvider
+                                  .todayMealPlan
+                                  ?.stats
+                                  .the15DayTotals
+                                  .calories
+                                  .toInt() ??
+                              0;
+                          final completed =
+                              dailyPlanProvider
+                                  .todayMealPlan
+                                  ?.stats
+                                  .the15DayCompleted
+                                  .calories
+                                  .toInt() ??
+                              0;
+                          final double fraction = total > 0
+                              ? (completed / total).clamp(0.0, 1.0)
+                              : 0.0;
+
+                          final width = constraints.maxWidth * fraction;
+                          return Stack(
+                            children: [
+                              Container(
+                                height: 10,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: customGreyText,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              Container(
+                                height: 10,
+                                width: width,
+                                decoration: BoxDecoration(
+                                  color: customTeal,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       vPad20,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         spacing: 20,
-                        children: const [
-                          _MacroStat(value: '280g', label: 'Protein'),
-                          _MacroStat(value: '35g', label: 'Carbs'),
-                          _MacroStat(value: '12g', label: 'Fat'),
+                        children: [
+                          _MacroStat(
+                            value:
+                                dailyPlanProvider
+                                    .todayMealPlan
+                                    ?.stats
+                                    .the15DayCompleted
+                                    .calories
+                                    .toInt() ??
+                                0,
+                            totalValue:
+                                dailyPlanProvider
+                                    .todayMealPlan
+                                    ?.stats
+                                    .the15DayTotals
+                                    .calories
+                                    .toInt() ??
+                                0,
+                            label: 'Protein',
+                          ),
+                          _MacroStat(
+                            value:
+                                dailyPlanProvider
+                                    .todayMealPlan
+                                    ?.stats
+                                    .the15DayCompleted
+                                    .carbs
+                                    .toInt() ??
+                                0,
+                            totalValue:
+                                dailyPlanProvider
+                                    .todayMealPlan
+                                    ?.stats
+                                    .the15DayTotals
+                                    .carbs
+                                    .toInt() ??
+                                0,
+                            label: 'Carbs',
+                          ),
+                          _MacroStat(
+                            value:
+                                dailyPlanProvider
+                                    .todayMealPlan
+                                    ?.stats
+                                    .the15DayCompleted
+                                    .fat
+                                    .toInt() ??
+                                0,
+                            totalValue:
+                                dailyPlanProvider
+                                    .todayMealPlan
+                                    ?.stats
+                                    .the15DayTotals
+                                    .fat
+                                    .toInt() ??
+                                0,
+                            label: 'Fat',
+                          ),
                         ],
                       ),
                       vPad15,
@@ -165,189 +239,72 @@ class MealPlanDayScreen extends StatelessWidget {
                 Expanded(
                   child: Container(
                     margin: EdgeInsets.all(defaultPadding),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultPadding * 1.5,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: defaultPadding),
 
                     decoration: BoxDecoration(
                       color: customDarkTeal,
                       borderRadius: BorderRadius.circular(defaultRadius),
                     ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      // mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        vPad5,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Today’s Meal Plan",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: "Outfit",
-                                color: customWhite,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.add, color: customWhite),
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: ListView(
-                            padding: EdgeInsets.all(0),
-                            children: [
-                              _MealCard(
-                                image:
-                                    'https://images.pexels.com/photos/461382/pexels-photo-461382.jpeg',
-                                mealType: 'Breakfast',
-                                mealName: 'Protein-Packed Pancakes',
-                                time: '10 min',
-                                calories: '340',
-                                onTap: () {
-                                  // context.push('/meal-detail', extra: {
-                                  //   'imageUrl': 'https://images.pexels.com/photos/461382/pexels-photo-461382.jpeg',
-                                  //   'title': 'Protein-Packed Pancakes',
-                                  //   'difficulty': 'Easy',
-                                  //   'rating': 4.8,
-                                  //   'time': 10,
-                                  //   'servings': 3,
-                                  //   'calories': 340,
-                                  //   'protein': 280,
-                                  //   'carbs': 35,
-                                  //   'fat': 12,
-                                  //   'tags': ['High protein', 'Quick', 'Breakfast'],
-                                  //   'ingredients': [
-                                  //     '1 cup oat flour',
-                                  //     '2 scoops vanilla protein powder',
-                                  //     '2 eggs',
-                                  //     '1 cup almond milk',
-                                  //     '1 tsp baking powder',
-                                  //     '1 tbsp honey',
-                                  //     '1/2 tsp vanilla extract',
-                                  //     'Pinch of salt',
-                                  //   ],
-                                  //   'healthyTip': 'Swap honey with sugar-free maple syrup to reduce calories by 60 and make it diabetic-friendly!',
-                                  // });
-                                },
-                              ),
-                              SizedBox(height: 12),
-                              _MealCard(
-                                image:
-                                    'https://images.pexels.com/photos/461382/pexels-photo-461382.jpeg',
-                                mealType: 'Lunch',
-                                mealName: 'Protein-Packed Pancakes',
-                                time: '10 min',
-                                calories: '340',
-                                onTap: () {
-                                  // context.push(
-                                  //   '/meal-detail',
-                                  //   extra: {
-                                  //     'imageUrl':
-                                  //         'https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg',
-                                  //     'title': 'Protein-Packed Pancakes',
-                                  //     'difficulty': 'Easy',
-                                  //     'rating': 4.7,
-                                  //     'time': 10,
-                                  //     'servings': 2,
-                                  //     'calories': 340,
-                                  //     'protein': 220,
-                                  //     'carbs': 30,
-                                  //     'fat': 10,
-                                  //     'tags': ['Healthy', 'Quick', 'Lunch'],
-                                  //     'ingredients': [
-                                  //       '2 slices whole grain bread',
-                                  //       '1 ripe avocado',
-                                  //       'Salt and pepper to taste',
-                                  //       'Lemon juice',
-                                  //     ],
-                                  //     'healthyTip':
-                                  //         'Use whole grain bread for extra fiber and nutrients.',
-                                  //   },
-                                  // );
-                                },
-                              ),
-                              SizedBox(height: 12),
-                              _MealCard(
-                                image:
-                                    'https://images.pexels.com/photos/5938/food-salad-healthy-lunch.jpg',
-                                mealType: 'Snacks',
-                                mealName: 'Protein-Packed Pancakes',
-                                time: '10 min',
-                                calories: '340',
-                                onTap: () {
-                                  // context.push(
-                                  //   '/meal-detail',
-                                  //   extra: {
-                                  //     'imageUrl':
-                                  //         'https://images.pexels.com/photos/461382/pexels-photo-461382.jpeg',
-                                  //     'title': 'Berry Smoothie',
-                                  //     'difficulty': 'Easy',
-                                  //     'rating': 4.9,
-                                  //     'time': 5,
-                                  //     'servings': 1,
-                                  //     'calories': 180,
-                                  //     'protein': 20,
-                                  //     'carbs': 22,
-                                  //     'fat': 4,
-                                  //     'tags': ['Healthy', 'Quick', 'Snack'],
-                                  //     'ingredients': [
-                                  //       '1 cup mixed berries',
-                                  //       '1/2 cup Greek yogurt',
-                                  //       '1/2 cup almond milk',
-                                  //       '1 tbsp honey',
-                                  //     ],
-                                  //     'healthyTip':
-                                  //         'Add chia seeds for extra omega-3 and fiber.',
-                                  //   },
-                                  // );
-                                },
-                              ),
-                              SizedBox(height: 12),
-                              _MealCard(
-                                image:
-                                    'https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg',
-                                mealType: 'Dinner',
-                                mealName: 'Protein-Packed Pancakes',
-                                time: '10 min',
-                                calories: '340',
-                                onTap: () {
-                                  context.push(
-                                    '/meal-detail',
-                                    extra: {
-                                      'imageUrl':
-                                          'https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg',
-                                      'title': 'Protein-Packed Pancakes',
-                                      'difficulty': 'Easy',
-                                      'rating': 4.8,
-                                      'time': 10,
-                                      'servings': 2,
-                                      'calories': 340,
-                                      'protein': 200,
-                                      'carbs': 25,
-                                      'fat': 8,
-                                      'tags': ['Dinner', 'Quick'],
-                                      'ingredients': [
-                                        '1 cup oat flour',
-                                        '2 scoops vanilla protein powder',
-                                        '2 eggs',
-                                        '1 cup almond milk',
-                                        '1 tsp baking powder',
-                                        '1 tbsp honey',
-                                        '1/2 tsp vanilla extract',
-                                        'Pinch of salt',
-                                      ],
-                                      'healthyTip':
-                                          'Try adding cinnamon for extra flavor.',
-                                    },
-                                  );
-                                },
-                              ),
+                        vPad15,
 
-                              vPad20,
-                            ],
+                        Text(
+                          "Today’s Meal Plan",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Outfit",
+                            color: customWhite,
+                          ),
+                        ),
+                        vPad5,
+
+                        Expanded(
+                          child: MediaQuery.removePadding(
+                            removeTop: true,
+                            context: context,
+                            child: ListView.builder(
+                              itemCount:
+                                  dailyPlanProvider
+                                      .todayMealPlan
+                                      ?.todayMeals
+                                      .length ??
+                                  0,
+                              itemBuilder: (context, index) {
+                                final item = dailyPlanProvider
+                                    .todayMealPlan
+                                    ?.todayMeals[index];
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onTap: () => animatedNavigateTo(
+                                      context,
+                                      MealDetailsView(
+                                        recipeDetails: item.recipe,
+                                        mealUniqueId: item.recipe.uniqueId,
+                                      ),
+                                    ),
+                                    child: _MealCard(
+                                      image: item!.recipe.image,
+                                      mealType: item.mealType,
+                                      isDone: item.completed,
+                                      mealName: item.recipe.recipeName,
+                                      time: item.recipe.makingTime,
+                                      calories: item.recipe.calories,
+                                      onTap: () {
+                                        dailyPlanProvider.markMealPlanAsDone(
+                                          uniqueId: item.recipe.uniqueId,
+                                          contex: context,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
@@ -356,64 +313,6 @@ class MealPlanDayScreen extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MacroStat extends StatelessWidget {
-  final String value;
-  final String label;
-  const _MacroStat({required this.value, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.04,
-              fontFamily: 'Outfit',
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.36,
-              // height: 0,
-            ),
-          ),
-          vPad5,
-          Text(
-            label,
-            style: TextStyle(
-              color: const Color(0xFFA0A0A6),
-              fontSize: 14.63,
-              fontFamily: 'Outfit',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          vPad10,
-          Stack(
-            children: [
-              Container(
-                height: 10,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: customGreyText,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-              Container(
-                height: 10,
-                width: 50,
-                decoration: BoxDecoration(
-                  color: customTeal,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-            ],
           ),
         ],
       ),

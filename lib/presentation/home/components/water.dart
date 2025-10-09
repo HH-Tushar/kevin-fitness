@@ -6,6 +6,9 @@ class _WaterBox extends StatelessWidget {
   const _WaterBox({this.height = 192});
   @override
   Widget build(BuildContext context) {
+    final LanguageProvider languageProvider = context.watch();
+    final translator = languageProvider.homeTranslation;
+    final DailyPlanProvider planProvider = context.watch();
     return Container(
       height: 170,
       decoration: BoxDecoration(
@@ -95,7 +98,7 @@ class _WaterBox extends StatelessWidget {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Water',
+                      translator.water,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -114,7 +117,12 @@ class _WaterBox extends StatelessWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        '1.2',
+                        planProvider
+                                .dailyPlan
+                                ?.aiRecomended
+                                .waterNeedLitersPerDay
+                                .toString() ??
+                            "",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,

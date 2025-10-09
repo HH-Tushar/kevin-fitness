@@ -19,6 +19,7 @@ class AuthController extends ChangeNotifier {
   UserProfile? get userProfile => _userProfile;
   UserInfo? get getUserInfo => _userInfo;
   String? get accessToken => _userCredential?.access;
+  String? get getUserEmail => _userCredential?.user.email;
 
   //implementation
   final AuthRepo authRepo = AuthRepo();
@@ -28,8 +29,8 @@ class AuthController extends ChangeNotifier {
     if (data != null) {
       _userCredential = data;
       refreshToken();
-      await fetchProfile(token: data.access);
-      await fetchUserInfo();
+      // await fetchProfile(token: data.access);
+     
       notifyListeners();
     }
   }
@@ -47,6 +48,8 @@ class AuthController extends ChangeNotifier {
       _userCredential?.access = data.accessToken;
       _userCredential?.refresh = data.refreshToken;
       UserCredentialStorage.save(_userCredential!);
+      await fetchProfile(token: _userCredential!.access);
+        await fetchUserInfo();
       notifyListeners();
       return data.accessToken;
     } else {
@@ -70,6 +73,7 @@ class AuthController extends ChangeNotifier {
       _userCredential = response;
       UserCredentialStorage.save(response);
       await fetchUserInfo();
+      await fetchProfile(token: response.access);
       //call others function for home page and notify here
       return success(response);
       // save in local and notify listeners
@@ -118,6 +122,7 @@ class UserCredentialStorage {
   static Future<void> save(UserCredential credential) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, credential.toRawJson());
+    await prefs.setString("token", credential.access);
   }
 
   /// Load UserCredential from SharedPreferences

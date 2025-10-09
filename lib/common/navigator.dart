@@ -10,7 +10,7 @@ animatedNavigateTo(BuildContext context, Widget child) {
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(opacity: animation, child: child);
       },
-      transitionDuration: Duration(milliseconds: 300), // Customize duration
+      transitionDuration: Duration(milliseconds: 200), // Customize duration
     ),
   );
 }

@@ -20,10 +20,12 @@ abstract class SettingTranslation {
   String get deleteAccountDialogTitle;
   String get deleteAccountDialogMessage;
   String get accountDeletedSuccess;
+  String get noEmailAvailable;
 }
 
 class SettingEnglish implements SettingTranslation {
   @override String get myProfile => "My Profile";
+  @override String get noEmailAvailable => "No email available";
   @override String get edit => "Edit";
   @override String get updateProfile => "Update your profile";
   @override String get generalSettings => "General Settings";
@@ -48,6 +50,7 @@ class SettingEnglish implements SettingTranslation {
 
 class SettingSpanish implements SettingTranslation {
   @override String get myProfile => "Mi Perfil";
+   @override String get noEmailAvailable => "No hay correo electrónico disponible";
   @override String get edit => "Editar";
   @override String get updateProfile => "Actualizar tu perfil";
   @override String get generalSettings => "Configuración General";

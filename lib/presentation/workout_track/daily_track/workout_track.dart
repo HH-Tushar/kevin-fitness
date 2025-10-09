@@ -1,6 +1,8 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:kenvinorellana/common/navigator.dart';
+import 'package:kenvinorellana/presentation/workout_track/workout_details/workout_details.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/daily_plan_provider.dart';
 import '/common/colors.dart';
 import '/common/gaps.dart';
 
@@ -8,10 +10,12 @@ part 'components/tile.dart';
 
 class WorkOutTrackView extends StatelessWidget {
   final int day;
-  const WorkOutTrackView({super.key, this.day = 3});
+  final bool? shouldPop;
+  const WorkOutTrackView({super.key, this.day = 3, this.shouldPop});
 
   @override
   Widget build(BuildContext context) {
+    final DailyPlanProvider dailyPlanProvider = context.watch();
     return Scaffold(
       backgroundColor: customGrey,
       body: Stack(
@@ -43,15 +47,15 @@ class WorkOutTrackView extends StatelessWidget {
               ),
             ),
           ),
-
-          // Positioned(
-          //   left: 0,
-          //   top: 48,
-          //   child: IconButton(
-          //     onPressed: () => Navigator.of(context).pop(),
-          //     icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
-          //   ),
-          // ),
+          if (shouldPop == true)
+            Positioned(
+              left: 0,
+              top: 48,
+              child: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: Icon(Icons.arrow_back, color: Colors.white, size: 22),
+              ),
+            ),
           // Day title
           Positioned(
             left: 30,
@@ -199,84 +203,64 @@ class WorkOutTrackView extends StatelessWidget {
                 vPad10,
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.all(defaultPadding),
-                    padding: EdgeInsets.symmetric(horizontal: 0),
+                    margin: EdgeInsets.symmetric(horizontal: defaultPadding),
 
-                    // decoration: BoxDecoration(
-                    //   color: customDarkTeal,
-                    //   borderRadius: BorderRadius.circular(defaultRadius),
-                    // ),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         vPad5,
-
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: [
-                        //     Text(
-                        //       "Today’s Meal Plan",
-                        //       style: TextStyle(
-                        //         fontSize: 15,
-                        //         fontWeight: FontWeight.w500,
-                        //         fontFamily: "Outfit",
-                        //         color: customWhite,
-                        //       ),
-                        //     ),
-                        //     IconButton(
-                        //       onPressed: () {},
-                        //       icon: Icon(Icons.add, color: customWhite),
-                        //     ),
-                        //   ],
-                        // ),
+                        Text(
+                          "Today’s Workout Plan",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "Outfit",
+                            color: customWhite,
+                          ),
+                        ),
+                        vPad10,
                         Expanded(
-                          child: ListView(
-                            padding: EdgeInsets.all(0),
-                            children: [
-                              _WorkOutTile(
-                                image:
-                                    'https://images.pexels.com/photos/461382/pexels-photo-461382.jpeg',
-                                times: 16,
-                                isDone: true,
-                                title: "Plank",
-                                duration: "00:33",
-                                onTap: () {},
-                              ),
-                              vPad10,
-
-                              _WorkOutTile(
-                                image:
-                                    'https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg',
-                                times: 20,
-                                title: 'Wide hand push ups',
-                                isDone: false,
-                                duration: "",
-                                onTap: () {},
-                              ),
-                              vPad10,
-                              _WorkOutTile(
-                                image:
-                                    'https://images.pexels.com/photos/461382/pexels-photo-461382.jpeg',
-                                times: 16,
-                                isDone: true,
-                                title: "Plank",
-                                duration: "00:33",
-                                onTap: () {},
-                              ),
-                              vPad10,
-
-                              _WorkOutTile(
-                                image:
-                                    'https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg',
-                                times: 20,
-                                title: 'Wide hand push ups',
-                                isDone: false,
-                                duration: "",
-                                onTap: () {},
-                              ),
-
-                              vPad20,
-                            ],
+                          child: MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: ListView.builder(
+                              itemCount:
+                                  dailyPlanProvider
+                                      .todayWorkoutPlan
+                                      ?.workouts
+                                      .length ??
+                                  0,
+                              itemBuilder: (context, index) {
+                                final item = dailyPlanProvider
+                                    .todayWorkoutPlan
+                                    ?.workouts[index];
+                                0;
+                                return GestureDetector(
+                                  onTap: () {
+                                    animatedNavigateTo(
+                                      context,
+                                      WorkoutDetailsView(workout: item.workout),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: _WorkOutTile(
+                                      image: item!.workout.image,
+                                      times: 16,
+                                      isDone: item.completed,
+                                      title: item.workout.workoutType,
+                                      duration: item.workout.timeNeeded,
+                                      onTap: () {
+                                        dailyPlanProvider.markWorkoutAsDone(
+                                          uniqueId: item.workout.uniqueId,
+                                          contex: context,
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],

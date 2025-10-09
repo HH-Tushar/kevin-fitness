@@ -5,13 +5,15 @@ class _WorkoutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DailyPlanProvider planProvider = context.watch();
+    final LanguageProvider languageProvider = context.watch();
+    final translator = languageProvider.homeTranslation;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Today's Workout Plan",
+            translator.todayWorkoutPlan,
             style: TextStyle(
               color: Colors.white,
               fontSize: 15,
@@ -27,7 +29,7 @@ class _WorkoutSection extends StatelessWidget {
                     planProvider.dailyPlan!.dailyMeal.entries.isEmpty)
                 ? Center(
                     child: Text(
-                      "No meal plan has been generated",
+                      translator.noWorkoutPlan,
                       style: TextStyle(color: customWhite, fontSize: 16),
                     ),
                   )
@@ -51,27 +53,6 @@ class _WorkoutSection extends StatelessWidget {
                     },
                   ),
           ),
-
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     _WorkoutCard(
-          //       day: 'Done',
-          //       exercise: 'Leg exercise',
-          //       isActive: true,
-          //     ),
-          //     _WorkoutCard(
-          //       day: 'Done',
-          //       exercise: 'Arm exercise',
-          //       isActive: true,
-          //     ),
-          //     _WorkoutCard(
-          //       day: 'Not Yet',
-          //       exercise: 'Leg exercise',
-          //       isActive: false,
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
@@ -90,10 +71,12 @@ class _WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LanguageProvider languageProvider = context.watch();
+    final translator = languageProvider.homeTranslation;
     return GestureDetector(
-      onTap: () => navigateTo(context, WorkOutTrackView()),
+      onTap: () => navigateTo(context, WorkOutTrackView(shouldPop: true,)),
       child: Container(
-        width: 118,
+        width: 130,
         height: 106,
         decoration: BoxDecoration(
           color: const Color(0xFF2D393A),
@@ -111,7 +94,7 @@ class _WorkoutCard extends StatelessWidget {
           spacing: 8,
           children: [
             Text(
-              isActive ? "Done" : "Not Yet",
+              isActive ? translator.done : translator.notYet,
               style: TextStyle(
                 color: isActive ? const Color(0xFFA855F7) : Colors.white,
                 fontSize: 13,
@@ -121,6 +104,7 @@ class _WorkoutCard extends StatelessWidget {
               ),
             ),
             Text(
+              textAlign: TextAlign.center,
               exercise,
               style: TextStyle(
                 color: Colors.white,
@@ -131,8 +115,9 @@ class _WorkoutCard extends StatelessWidget {
               ),
             ),
             Container(
-              width: 67,
-              height: 25,
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              margin: EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
@@ -152,7 +137,8 @@ class _WorkoutCard extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  'Exercise',
+                  translator.exercise,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,

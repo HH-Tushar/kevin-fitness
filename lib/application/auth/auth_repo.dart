@@ -216,7 +216,7 @@ class AuthRepo {
 
     try {
       // Send the POST request
-      final response = await http.post(Uri.parse(url), headers: headers);
+      final response = await http.get(Uri.parse(url), headers: headers);
 
       // Check the status of the response
       if (response.statusCode == 200) {
@@ -255,7 +255,8 @@ class AuthRepo {
 
       // Check the status of the response
       if (response.statusCode == 200) {
-        // If the server responds with a 200 OK, parse the response
+        final body = jsonDecode(response.body);
+        print(body);
         return success(UserInfo.fromJson(json.decode(response.body)));
       } else if (response.statusCode == 401) {
         return failed(Failure(title: "Invalid Email or Password"));
@@ -265,7 +266,7 @@ class AuthRepo {
     } on SocketException {
       return failed(InternetFailure());
     } catch (e) {
-      dPrint(e.toString());
+      // dPrint(e.toString());
       return failed(
         Failure(title: "Something went wrong. Please try again later."),
       );

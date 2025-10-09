@@ -6,6 +6,7 @@ import 'package:kenvinorellana/providers/daily_plan_provider.dart';
 import 'package:kenvinorellana/translation/localization.dart';
 import 'package:provider/provider.dart';
 
+import '../chat/chat_view.dart';
 import '../home/home_controller.dart';
 import '../meal_track/daily_track/meal_track.dart';
 import '../plan_generator/ai_gen_landing/plan_generator.dart';

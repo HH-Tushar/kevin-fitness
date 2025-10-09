@@ -1,193 +1,266 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kenvinorellana/common/colors.dart';
+import 'package:kenvinorellana/common/gaps.dart';
+import 'package:kenvinorellana/common/navigator.dart';
+import 'package:kenvinorellana/presentation/workout_track/workout_details/workout_details.dart';
+import 'package:provider/provider.dart';
 
-part 'components/meal_list.dart';
+import '../../application/daily_plan/models/daily_meal_plan.dart';
+import '../../application/daily_plan/models/daily_workout_plan.dart';
+import '../../application/daily_plan/search_repo.dart';
+import '../../common/shimmer_loading.dart';
+import '../../translation/localization.dart';
+
 part 'components/macro_legend_dot.dart';
 part 'components/exercise_list_view.dart';
 part 'components/filter_tag.dart';
+
+part 'layers/meal.dart';
+part 'layers/workout.dart';
+part 'layers/loading.dart';
+
+part 'controller.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final selectedCategory = ref.watch(searchCategoryProvider);
-    // final searchQuery = ref.watch(searchQueryProvider);
+    return ChangeNotifierProvider(
+      create: (context) => _SearchController(context: context),
+      child: _Layout(),
+    );
+  }
+}
+
+class _Layout extends StatelessWidget {
+  const _Layout();
+
+  @override
+  Widget build(BuildContext context) {
+    final _SearchController controller = context.watch();
     return Scaffold(
-      backgroundColor: const Color(0xFF263133),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: Container(
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2D393A),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(width: 12),
-                        Icon(Icons.search, color: Colors.white, size: 20),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontFamily: 'Outfit',
-                            ),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Search recipes, ingredients, workouts',
-                              hintStyle: TextStyle(
-                                color: Colors.white.withOpacity(0.6),
-                                fontSize: 15,
-                                fontFamily: 'Outfit',
-                              ),
-                            ),
-                            // onChanged: (value) => ref.read(searchQueryProvider.notifier).state = value,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16),
-            // Animated Category toggle
-            Container(
-              height: 44,
-              decoration: BoxDecoration(
-                color: const Color(0xFF232B2D),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeInOut,
-                      decoration: BoxDecoration(
-                        // color: selectedCategory == 0 ? const Color(0xFF2D393A) : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          // color: selectedCategory == 0 ? const Color(0xFF8BF0E6) : Colors.transparent,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(8),
-                        onTap: () {
-                          // ref.read(searchCategoryProvider.notifier).state = 0;
-                        },
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Meals',
-                              style: TextStyle(
-                                // color: selectedCategory == 0 ? Colors.white : Colors.white.withOpacity(0.7),
-                                fontSize: 15,
-                                fontFamily: 'Outfit',
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeInOut,
-                      decoration: BoxDecoration(
-                        // color: selectedCategory == 1 ? const Color(0xFF2D393A) : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          // color: selectedCategory == 1 ? const Color(0xFF8BF0E6) : Colors.transparent,
-                          width: 1.5,
-                        ),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(8),
-                        onTap: () {
-                          // ref.read(searchCategoryProvider.notifier).state = 1;
-                        },
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                              'Exercises',
-                              style: TextStyle(
-                                // color: selectedCategory == 1 ? Colors.white : Colors.white.withOpacity(0.7),
-                                fontSize: 15,
-                                fontFamily: 'Outfit',
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 18),
-            // Filter tags (placeholder, can be dynamic based on category)
-            Wrap(
-              spacing: 10,
-              runSpacing: 8,
-              // children: selectedCategory == 0
-              //     ? [
-              //         _FilterTag(label: 'High protein', count: 38, selected: false),
-              //         _FilterTag(label: 'Healthy', count: 20, selected: false),
-              //         _FilterTag(label: 'Cheat meal', count: 120, selected: false),
-              //         _FilterTag(label: 'Quick recipe', count: 120, selected: false),
-              //       ]
-              //     :
+            Row(
               children: [
-                _FilterTag(label: 'Leg', count: 38, selected: false),
-                _FilterTag(label: 'Chest', count: 20, selected: false),
-                _FilterTag(label: 'Arm', count: 120, selected: false),
-                _FilterTag(label: 'Belly', count: 120, selected: false),
-                _FilterTag(label: 'Full body', count: 120, selected: false),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.arrow_back, color: customWhite),
+                ),
+                hPad5,
+                Text(
+                  "Search",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w600,
+                    height: 0.71,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                hPad20,
+                hPad20,
               ],
             ),
-            SizedBox(height: 18),
-            // Dummy data list for selected category
+            vPad10,
+
             Expanded(
-              child: 0 == 0
-                  ? _MealListView(query: "searchQuery")
-                  : _ExerciseListView(query: "searchQuery"),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
+                child: DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF232B2D),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+
+                        child: TabBar(
+                          dividerHeight: 0,
+                          // se
+                          labelColor: customWhite,
+                          unselectedLabelColor: customGreyText,
+                          indicator: BoxDecoration(
+                            color: customGrey,
+                            border: Border.all(color: customLightBlue),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          labelStyle: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Outfit',
+                            fontWeight: FontWeight.w600,
+                          ),
+                          tabs: [
+                            Tab(text: "Meals"),
+                            Tab(text: "Workouts"),
+                          ],
+                        ),
+                      ),
+                      vPad15,
+
+                      // SizedBox(
+                      //   // height: 80, // Fixed height for two rows
+                      //   child: SingleChildScrollView(
+                      //     scrollDirection: Axis.horizontal,
+                      //     child: Padding(
+                      //       padding: EdgeInsets.symmetric(horizontal: 4),
+                      //       child: Row(
+                      //         spacing: 10,
+                      //         children: controller.selectedCategory == 0
+                      //             ? [
+                      //                 _FilterTag2(
+                      //                   label: 'High protein',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'High protein',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Healthy',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Healthy',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Cheat meal',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Cheat meal',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Quick recipe',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Quick recipe',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Low carb',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Low carb',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Vegetarian',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Vegetarian',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Gluten free',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Gluten free',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Keto',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Keto',
+                      //                   onTap: () {},
+                      //                 ),
+                      //               ]
+                      //             : [
+                      //                 _FilterTag2(
+                      //                   label: 'Leg',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Leg',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Chest',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Chest',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Arm',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Arm',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Belly',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Belly',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Full body',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Full body',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Back',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Back',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Shoulder',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Shoulder',
+                      //                   onTap: () {},
+                      //                 ),
+
+                      //                 _FilterTag2(
+                      //                   label: 'Cardio',
+                      //                   selected:
+                      //                       controller.selectedFilterTag ==
+                      //                       'Cardio',
+                      //                   onTap: () {},
+                      //                 ),
+                      //               ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // vPad10,
+                      Expanded(
+                        child: TabBarView(
+                          children: [_MealListView(), _WorkoutListView()],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),

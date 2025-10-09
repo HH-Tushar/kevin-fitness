@@ -1,11 +1,10 @@
 part of '../home_screen.dart';
 
-
 // --- Motivation Card ---
 class _MotivationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-        final DailyPlanProvider planProvider = context.watch();
+    final DailyPlanProvider planProvider = context.watch();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Stack(
@@ -69,7 +68,9 @@ class _CalorieBox extends StatelessWidget {
   const _CalorieBox({this.height = 90});
   @override
   Widget build(BuildContext context) {
-        final DailyPlanProvider planProvider = context.watch();
+    final DailyPlanProvider planProvider = context.watch();
+    final LanguageProvider languageProvider = context.watch();
+    final translator = languageProvider.homeTranslation;
     return Container(
       height: 80,
       decoration: BoxDecoration(
@@ -87,13 +88,15 @@ class _CalorieBox extends StatelessWidget {
               hPad5,
               Icon(Icons.bar_chart, color: const Color(0xFFA855F7), size: 22),
               SizedBox(width: 8),
-              Text(
-                'Calorie need(daily)',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontFamily: 'Outfit',
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Text(
+                  translator.calorieNeedDaily,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontFamily: 'Outfit',
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
@@ -110,7 +113,13 @@ class _CalorieBox extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: planProvider.dailyPlan?.aiRecomended.totalCaloriesPerDay.toString()??"",
+                      text:
+                          planProvider
+                              .dailyPlan
+                              ?.aiRecomended
+                              .totalCaloriesPerDay
+                              .toString() ??
+                          "",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -171,7 +180,9 @@ class _SleepBox extends StatelessWidget {
   const _SleepBox({this.height = 80});
   @override
   Widget build(BuildContext context) {
-     final DailyPlanProvider planProvider = context.watch();
+    final DailyPlanProvider planProvider = context.watch();
+    final LanguageProvider languageProvider = context.watch();
+    final translator = languageProvider.homeTranslation;
     return Container(
       height: 80,
       decoration: BoxDecoration(
@@ -194,7 +205,7 @@ class _SleepBox extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                'sleep',
+                translator.sleep,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 17,
@@ -214,7 +225,13 @@ class _SleepBox extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: planProvider.dailyPlan?.aiRecomended.sleepNeedHoursPerDay.toString()??"",
+                      text:
+                          planProvider
+                              .dailyPlan
+                              ?.aiRecomended
+                              .sleepNeedHoursPerDay
+                              .toString() ??
+                          "",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -286,4 +303,3 @@ class _SleepBox extends StatelessWidget {
     );
   }
 }
-

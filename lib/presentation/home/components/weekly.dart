@@ -2,22 +2,12 @@ part of '../home_screen.dart';
 
 class WeeklyCalendarWidget extends StatelessWidget {
   final DateTime selectedDate;
-  // final Color backgroundColor;
-  // final Color selectedColor;
-  // final Color textColor;
-  // final Color selectedTextColor;
-
-  const WeeklyCalendarWidget({
-    super.key,
-    required this.selectedDate,
-    // this.backgroundColor = const Color(0xFF2C3E50),
-    // this.selectedColor = customLightBlue,
-    // this.textColor = Colors.white,
-    // this.selectedTextColor = Colors.white,
-  });
+  const WeeklyCalendarWidget({super.key, required this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
+    final LanguageProvider languageProvider = context.watch();
+    final translator = languageProvider.homeTranslation;
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -40,7 +30,7 @@ class WeeklyCalendarWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Weekly Goal',
+                translator.weeklyGoal,
                 style: TextStyle(
                   color: customWhite,
                   fontSize: 18,
@@ -61,14 +51,14 @@ class WeeklyCalendarWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: _buildWeekDays(),
+            children: _buildWeekDays(() {}),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildWeekDays() {
+  List<Widget> _buildWeekDays(VoidCallback onTap) {
     final startOfWeek = selectedDate.subtract(
       Duration(days: selectedDate.weekday - 1),
     );
@@ -85,39 +75,42 @@ class WeeklyCalendarWidget extends StatelessWidget {
           day.month == selectedDate.month &&
           day.year == selectedDate.year;
 
-      return Column(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.transparent,
-              border: isSelected
-                  ? Border.all(color: customLightBlue, width: 1)
-                  : null,
-            ),
-            child: Center(
-              child: Text(
-                '${day.day}',
-                style: TextStyle(
-                  color: isSelected ? customLightBlue : customWhite,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+      return InkWell(
+        onTap: onTap,
+        child: Column(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent,
+                border: isSelected
+                    ? Border.all(color: customLightBlue, width: 1)
+                    : null,
+              ),
+              child: Center(
+                child: Text(
+                  '${day.day}',
+                  style: TextStyle(
+                    color: isSelected ? customLightBlue : customWhite,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            weekDays[index],
-            style: TextStyle(
-              color: isSelected ? customLightBlue : customWhite,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+            const SizedBox(height: 4),
+            Text(
+              weekDays[index],
+              style: TextStyle(
+                color: isSelected ? customLightBlue : customWhite,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     });
   }

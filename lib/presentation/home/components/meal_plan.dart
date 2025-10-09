@@ -5,13 +5,15 @@ class _MealIdeaSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DailyPlanProvider planProvider = context.watch();
+    final LanguageProvider languageProvider = context.watch();
+    final translator = languageProvider.homeTranslation;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Today's Meal Idea",
+            translator.todaysMealIdea,
             style: TextStyle(
               color: Colors.white,
               fontSize: 15,
@@ -27,7 +29,7 @@ class _MealIdeaSection extends StatelessWidget {
                     planProvider.dailyPlan!.dailyMeal.entries.isEmpty)
                 ? Center(
                     child: Text(
-                      "No meal plan has been generated",
+                      translator.noMealPlan,
                       style: TextStyle(color: customWhite, fontSize: 16),
                     ),
                   )
@@ -41,9 +43,13 @@ class _MealIdeaSection extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: _MealCard(
-                          status: item?.completed == true ? "Done" : "Not Yet",
+                          status: item?.completed == true
+                              ? translator.done
+                              : translator.notYet,
                           title: item?.mealType ?? "",
-                          button: item?.completed == true ? "" : "Eat Now",
+                          button: item?.completed == true
+                              ? ""
+                              : translator.eatNow,
                           statusColor: item?.completed == true
                               ? customLightBlue
                               : customWhite,
@@ -52,33 +58,6 @@ class _MealIdeaSection extends StatelessWidget {
                     },
                   ),
           ),
-
-          // SizedBox(
-          //   height: 110,
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       _MealCard(
-          //         status: 'Done',
-          //         title: 'Breakfast',
-          //         button: 'Eat Now',
-          //         statusColor: customLightBlue,
-          //       ),
-          //       _MealCard(
-          //         status: 'Done',
-          //         title: 'Snacks',
-          //         button: 'Eat Now',
-          //         statusColor: const Color(0xFF8BF0E6),
-          //       ),
-          //       _MealCard(
-          //         status: 'Upcoming',
-          //         title: 'Lunch',
-          //         button: 'Eat Now',
-          //         statusColor: Colors.white,
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
@@ -100,9 +79,9 @@ class _MealCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => navigateTo(context, MealPlanDayScreen()),
+      onTap: () => navigateTo(context, MealPlanDayScreen(shouldPop: true)),
       child: Container(
-        width: 120,
+        width: 130,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: const Color(0xFF2D393A),
@@ -131,6 +110,7 @@ class _MealCard extends StatelessWidget {
             ),
             Text(
               title,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,
@@ -140,8 +120,9 @@ class _MealCard extends StatelessWidget {
               ),
             ),
             Container(
-              width: 67,
-              height: 25,
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              margin: EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
                   begin: Alignment.centerLeft,
@@ -157,16 +138,15 @@ class _MealCard extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Center(
-                child: Text(
-                  button,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w400,
-                    height: 1.33,
-                  ),
+              child: Text(
+                button,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontFamily: 'Outfit',
+                  fontWeight: FontWeight.w400,
+                  height: 1.33,
                 ),
               ),
             ),
