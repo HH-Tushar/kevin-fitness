@@ -86,8 +86,15 @@ class PlanGeneratorView extends StatelessWidget {
                                   icon: Icons.fitness_center,
                                   iconBg: const Color(0xFF6F1877),
                                   label: planGen.aiWorkoutPlan,
-                                  onTap: () {
-                                    animatedNavigateTo(context, AiDataFeed());
+                                  onTap: () async {
+                                    final dd = await animatedNavigateTo(
+                                      context,
+                                      AiDataFeed(),
+                                    );
+                                    if (dd == true) {
+                                      authController.fetchUserInfo();
+                                    }
+                                    // Navigator.push(context, )
                                   },
                                 ),
 

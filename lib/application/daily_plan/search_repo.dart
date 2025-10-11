@@ -32,7 +32,7 @@ class SearchRepo {
         }).toList();
         return success(list);
       } else if (response.statusCode == 401) {
-        return failed(Failure(title: "Invalid Email or Password"));
+        return failed(SessionExpired());
       } else {
         throw Exception('Failed to log in: ${response.body}');
       }
@@ -44,6 +44,7 @@ class SearchRepo {
       );
     }
   }
+
   Future<Attempt<List<Workout>>> getAllWorkout({
     // required String token,
     required String language,
@@ -66,7 +67,42 @@ class SearchRepo {
         }).toList();
         return success(list);
       } else if (response.statusCode == 401) {
-        return failed(Failure(title: "Invalid Email or Password"));
+        return failed(SessionExpired());
+      } else {
+        throw Exception('Failed to log in: ${response.body}');
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
+
+  Future<Attempt<String>> postWorkoutPlan({
+    required Map<String, dynamic> workoutData,
+  }) async {
+    final String url = '$baseUrl/userapi/workout-plans/generate/';
+
+    // Set the headers for the request
+    final Map<String, String> headers = await getAuthHeaders();
+
+    try {
+      // Send the POST request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(workoutData),
+      );
+
+      // Check the status of the response
+      if (response.statusCode == 201) {
+        final body = jsonDecode(response.body);
+        print(body);
+        return success("Successfully created workout plan");
+      } else if (response.statusCode == 401) {
+        return failed(SessionExpired());
       } else {
         throw Exception('Failed to log in: ${response.body}');
       }

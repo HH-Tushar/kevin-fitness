@@ -314,8 +314,5 @@ class DailyPlanRepo {
     }
   }
 
-  Future<void> getUserSummery() async {
-    // /userapi/achievement/details/
-  }
   
 }

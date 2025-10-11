@@ -3,7 +3,7 @@ part of 'plan_data.dart';
 class _DataSource {
   // Define equipment categories
 
-  final fitnessLevelData = ['Begainers', 'Basic', 'Intermediate', 'High'];
+  final fitnessLevelData = ['Beginners', 'Basic', 'Intermediate', 'High'];
   final trainingLocationData = ['At home', 'At gym', 'Other sports'];
   final chestEquipment = [
     'Flat Chest Press Machine',
@@ -76,10 +76,10 @@ class _DataSource {
 
   final lowerBackEquipment = ['Hyperextension Bench', 'Back Extension Machine'];
 
-  String fitnessLevel = "";
-  String trainingLocation = "";
-  String workoutDuration = "";
-  String injuries = "";
+  String fitnessLevel = "Basic";
+  String trainingLocation = "At gym";
+  String workoutDuration = "30";
+  String injuries = "No";
   List<String> chest = [];
   List<String> back = [];
   List<String> shoulders = [];
@@ -113,4 +113,9 @@ class _DataSource {
 
     return workoutData;
   }
+
+
+
+
+
 }

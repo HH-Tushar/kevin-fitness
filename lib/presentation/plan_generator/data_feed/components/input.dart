@@ -319,13 +319,15 @@ Widget _buildCheckboxOption({
           ),
         ),
         SizedBox(width: 12),
-        Text(
-          option,
-          style: TextStyle(
-            color: const Color(0xFFA0A0A6),
-            fontSize: 14,
-            fontFamily: 'Outfit',
-            fontWeight: FontWeight.w300,
+        Expanded(
+          child: Text(
+            option,
+            style: TextStyle(
+              color: const Color(0xFFA0A0A6),
+              fontSize: 14,
+              fontFamily: 'Outfit',
+              fontWeight: FontWeight.w300,
+            ),
           ),
         ),
       ],
