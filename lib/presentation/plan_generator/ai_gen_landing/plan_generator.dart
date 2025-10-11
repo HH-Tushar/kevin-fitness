@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/presentation/feedback/feedback_view.dart';
+import '../../../common/shimmer_loading.dart';
 import '../data_feed/plan_data.dart';
 import '/common/gaps.dart';
 import '/common/navigator.dart';
@@ -14,8 +15,35 @@ import '../plan_list/meals_list/ai_gen_tracks.dart';
 import '../plan_list/workout_list/ai_gen_tracks.dart';
 part 'components/profile.dart';
 
-class PlanGeneratorView extends StatelessWidget {
+class PlanGeneratorView extends StatefulWidget {
   const PlanGeneratorView({super.key});
+
+  @override
+  State<PlanGeneratorView> createState() => _PlanGeneratorViewState();
+}
+
+class _PlanGeneratorViewState extends State<PlanGeneratorView> {
+  bool isLoading = false;
+  void recheck() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final data = await Provider.of<AuthController>(
+      context,
+      listen: false,
+    ).fetchUserInfo();
+
+    if (data != null) {
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +99,7 @@ class PlanGeneratorView extends StatelessWidget {
                     child: SingleChildScrollView(
                       child: RefreshIndicator(
                         onRefresh: () async {
-                          await authController.fetchUserInfo();
+                          recheck();
                         },
                         child: Column(
                           children: [
@@ -87,12 +115,12 @@ class PlanGeneratorView extends StatelessWidget {
                                   iconBg: const Color(0xFF6F1877),
                                   label: planGen.aiWorkoutPlan,
                                   onTap: () async {
-                                    final dd = await animatedNavigateTo(
+                                    final didChanged = await animatedNavigateTo(
                                       context,
                                       AiDataFeed(),
                                     );
-                                    if (dd == true) {
-                                      authController.fetchUserInfo();
+                                    if (didChanged == true) {
+                                      recheck();
                                     }
                                     // Navigator.push(context, )
                                   },
@@ -110,59 +138,60 @@ class PlanGeneratorView extends StatelessWidget {
 
                             vPad20,
 
-                            (userInfo != null && userInfo.mealPlans.isNotEmpty)
-                                ? _AIDietPlanCard(
-                                    mealPlan: userInfo.mealPlans.first,
-                                    onFeedbackTap: () {
-                                      animatedNavigateTo(
-                                        context,
-                                        FeedbackView(),
-                                      );
-                                    },
+                            isLoading
+                                ? Column(
+                                    spacing: 16,
+                                    children: [
+                                      ShimmerContainer(
+                                        width: double.infinity,
+                                        height: 50,
+                                        borderRadius: 8,
+                                      ),
+                                      ShimmerContainer(
+                                        width: double.infinity,
+                                        height: 50,
+                                        borderRadius: 8,
+                                      ),
+                                    ],
                                   )
-                                : SizedBox(),
+                                : Column(
+                                    children: [
+                                      (userInfo != null &&
+                                              userInfo.mealPlans.isNotEmpty)
+                                          ? _AIDietPlanCard(
+                                              mealPlan:
+                                                  userInfo.mealPlans.first,
+                                              onFeedbackTap: () {
+                                                animatedNavigateTo(
+                                                  context,
+                                                  FeedbackView(),
+                                                );
+                                              },
+                                            )
+                                          : SizedBox(),
 
-                            vPad20,
-                            (userInfo != null &&
-                                    userInfo.workoutPlans.isNotEmpty)
-                                ? _AIWorkoutPlanCard(
-                                    workoutPlan: userInfo.workoutPlans.first,
-                                    onFeedbackTap: () {
-                                      animatedNavigateTo(
-                                        context,
-                                        FeedbackView(),
-                                      );
-                                    },
-                                  )
-                                : SizedBox(),
+                                      vPad20,
+                                      (userInfo != null &&
+                                              userInfo.workoutPlans.isNotEmpty)
+                                          ? _AIWorkoutPlanCard(
+                                              workoutPlan:
+                                                  userInfo.workoutPlans.first,
+                                              onFeedbackTap: () {
+                                                animatedNavigateTo(
+                                                  context,
+                                                  FeedbackView(),
+                                                );
+                                              },
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  ),
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-
-                // userInfo.workoutPlans.isNotEmpty &&
-                //         userInfo.workoutPlans.first.isCompleted == true
-                //     ? _AIWorkoutPlanCard(
-                //         workoutPlan: userInfo.workoutPlans.first,
-                //         onFeedbackTap: () => _navigateToFeedback(
-                //           workoutPlanId: userInfo.workoutPlans.first.id,
-                //         ),
-                //       )
-                //     : GestureDetector(
-                //         //  onTap: () => _navigateToWorkoutPlan(),
-                //         child: _AIWorkoutPlanCard(
-                //           workoutPlan: userInfo.workoutPlans.isNotEmpty
-                //               ? userInfo.workoutPlans.first
-                //               : null,
-                //           onFeedbackTap: () => _navigateToFeedback(
-                //             workoutPlanId: userInfo.workoutPlans.isNotEmpty
-                //                 ? userInfo.workoutPlans.first.id
-                //                 : null,
-                //           ),
-                //         ),
-                //       ),
               ],
             ),
           ),

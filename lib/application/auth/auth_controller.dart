@@ -82,13 +82,15 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchUserInfo() async {
+  Future<UserInfo?> fetchUserInfo() async {
     final (data, error) = await authRepo.getUserInfo(
       token: _userCredential!.access,
       language: "language",
     );
     if (data != null) {
       _userInfo = data;
+      notifyListeners();
+      return data;
     }
     notifyListeners();
   }
