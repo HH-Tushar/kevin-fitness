@@ -30,7 +30,7 @@ class AuthController extends ChangeNotifier {
       _userCredential = data;
       refreshToken();
       // await fetchProfile(token: data.access);
-     
+
       notifyListeners();
     }
   }
@@ -49,7 +49,7 @@ class AuthController extends ChangeNotifier {
       _userCredential?.refresh = data.refreshToken;
       UserCredentialStorage.save(_userCredential!);
       await fetchProfile(token: _userCredential!.access);
-        await fetchUserInfo();
+      await fetchUserInfo();
       notifyListeners();
       return data.accessToken;
     } else {
@@ -95,8 +95,26 @@ class AuthController extends ChangeNotifier {
 
   Future<Attempt<UserProfile>> fetchProfile({required String token}) async {
     final (response, error) = await authRepo.getProfile(
-      language: "email",
+      language: "",
       token: token,
+    );
+    if (response != null) {
+      _userProfile = response;
+      return success(response);
+      // save in local and notify listeners
+    } else {
+      return failed(error!);
+    }
+  }
+
+  Future<Attempt<UserProfile>> updateProfile({
+    required String language,
+    required UserProfile userProfile,
+  }) async {
+    final (response, error) = await authRepo.updateProfile(
+      language: language,
+      token: accessToken!,
+      userProfile: userProfile,
     );
     if (response != null) {
       _userProfile = response;

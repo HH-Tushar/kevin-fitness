@@ -8,6 +8,7 @@ import 'home_translation.dart';
 import 'meal_plan_translation.dart';
 import 'profile_translation.dart';
 import 'setting_translation.dart';
+import 'summery_translation.dart';
 import 'upgrade_plan_translation.dart';
 import 'workout_plan_transaltoin.dart';
 
@@ -46,6 +47,8 @@ class LanguageProvider with ChangeNotifier {
       _isEnglish ?HomeEnglish() :HomeSpanish();
   FeedbackTranslation get feedbackTranslation =>
       _isEnglish ?FeedbackEnglish() :FeedbackSpanish();
+  SummaryTranslation get summaryTranslation =>
+      _isEnglish ?SummaryEnglish() :SummarySpanish();
 
   // Add other translation getters here
 }

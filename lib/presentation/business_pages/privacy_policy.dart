@@ -7,24 +7,26 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF263133),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset(
-                'assets/images/ai_recommended_bg.png',
-                fit: BoxFit.cover,
-              ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            top: 0,
+            bottom: 0,
+            child: Image.asset(
+              'assets/images/ai_recommended_bg.png',
+              fit: BoxFit.cover,
             ),
-            SingleChildScrollView(
+          ),
+          SafeArea(
+            child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0),
                 child: Column(
                   children: [
-                    const SizedBox(height: 32),
+                    // const SizedBox(height: 32),
                     Row(
                       children: [
-                        const SizedBox(width: 12),
+                        // const SizedBox(width: 12),
                         IconButton(
                           onPressed: () => Navigator.of(context).pop(),
                           icon: const Icon(
@@ -38,10 +40,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
                               'Privacy Policy',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 24,
+                                fontSize: 22,
                                 fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w600,
-                                letterSpacing: -0.5,
+                                // letterSpacing: -0.5,
                               ),
                             ),
                           ),
@@ -92,8 +94,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/presentation/feedback/feedback_view.dart';
+import '../data_feed/plan_data.dart';
 import '/common/gaps.dart';
 import '/common/navigator.dart';
 import '/translation/localization.dart';
@@ -85,7 +86,9 @@ class PlanGeneratorView extends StatelessWidget {
                                   icon: Icons.fitness_center,
                                   iconBg: const Color(0xFF6F1877),
                                   label: planGen.aiWorkoutPlan,
-                                  onTap: () {},
+                                  onTap: () {
+                                    animatedNavigateTo(context, AiDataFeed());
+                                  },
                                 ),
 
                                 _OutlinedFeatureButton(

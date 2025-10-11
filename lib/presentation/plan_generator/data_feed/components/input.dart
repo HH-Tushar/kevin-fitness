@@ -1,4 +1,4 @@
-part of '../feedback_view.dart';
+part of '../plan_data.dart';
 
 Widget _buildSectionCard({required Widget child}) {
   return Container(
@@ -115,22 +115,22 @@ Widget _buildDropdownField({
       Text(
         label,
         style: TextStyle(
-          color: const Color(0xFFA0A0A6),
-          fontSize: 13,
+          color: customWhite,
+          fontSize: 14,
           fontFamily: 'Outfit',
-          fontWeight: FontWeight.w400,
         ),
       ),
       SizedBox(height: 8),
       Container(
         width: double.infinity,
-        height: 42,
+        height: 50,
         decoration: BoxDecoration(
           border: Border.all(color: const Color(0xFFA0A0A6), width: 1),
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
+            padding: EdgeInsets.symmetric(horizontal: defaultPadding),
             value: value,
             isExpanded: true,
             items: items
@@ -248,8 +248,8 @@ Widget _buildRadioOption({
 
 Widget _buildCheckboxSection({
   required String title,
-  required String question,
-  required List<Map<String, String>> options,
+  // required String question,
+  required List<String> options,
   required Set<String> selectedValues,
   required ValueChanged<Set<String>> onChanged,
 }) {
@@ -260,32 +260,23 @@ Widget _buildCheckboxSection({
         title,
         style: TextStyle(
           color: Colors.white,
-          fontSize: 20,
+          fontSize: 16,
           fontFamily: 'Outfit',
-          fontWeight: FontWeight.w500,
+          // fontWeight: FontWeight.w500,
         ),
       ),
-      SizedBox(height: 8),
-      Text(
-        question,
-        style: TextStyle(
-          color: const Color(0xFFA0A0A6),
-          fontSize: 14,
-          fontFamily: 'Outfit',
-          fontWeight: FontWeight.w300,
-        ),
-      ),
+
       SizedBox(height: 16),
       ...options.map(
         (option) => _buildCheckboxOption(
-          option: option['label']!,
-          isSelected: selectedValues.contains(option['key']),
+          option: option,
+          isSelected: selectedValues.contains(option),
           onChanged: (isSelected) {
             final newValues = Set<String>.from(selectedValues);
             if (isSelected) {
-              newValues.add(option['key']!);
+              newValues.add(option);
             } else {
-              newValues.remove(option['key']!);
+              newValues.remove(option);
             }
             onChanged(newValues);
           },
@@ -348,6 +339,7 @@ Widget _buildTextAreaField({
   String? initialValue,
   required ValueChanged<String> onChanged,
   required String hint,
+  TextInputFormatter? inputFormate,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,9 +348,9 @@ Widget _buildTextAreaField({
         label,
         style: TextStyle(
           color: customWhite,
-          fontSize: 16,
+          fontSize: 14,
           fontFamily: 'Outfit',
-          fontWeight: FontWeight.w600,
+          // fontWeight: FontWeight.w600,
         ),
       ),
       vPad10,
@@ -371,31 +363,30 @@ Widget _buildTextAreaField({
         ),
         child: TextFormField(
           // controller: controller,
+          inputFormatters: inputFormate != null ? [inputFormate] : [],
           initialValue: initialValue,
           onChanged: onChanged,
           maxLines: 1,
           style: TextStyle(
             color: const Color(0xFF767781),
-            fontSize: 15,
+            fontSize: 14,
             fontFamily: 'Outfit',
             fontWeight: FontWeight.w400,
           ),
+
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
               color: const Color(0xFF767781),
-              fontSize: 15,
+              fontSize: 14,
               fontFamily: 'Outfit',
               fontWeight: FontWeight.w400,
             ),
             border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
         ),
       ),
     ],
   );
 }
-
-
-

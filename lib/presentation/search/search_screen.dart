@@ -53,15 +53,18 @@ class _Layout extends StatelessWidget {
                   icon: Icon(Icons.arrow_back, color: customWhite),
                 ),
                 hPad5,
-                Text(
-                  "Search",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontFamily: 'Outfit',
-                    fontWeight: FontWeight.w600,
-                    height: 0.71,
-                    letterSpacing: 1.5,
+                Expanded(
+                  child: Text(
+                    "Search",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontFamily: 'Outfit',
+                      fontWeight: FontWeight.w600,
+                      // height: 0.71,
+                      // letterSpacing: 1.5,
+                    ),
                   ),
                 ),
                 hPad20,

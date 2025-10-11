@@ -25,7 +25,7 @@ class TermsConditionsScreen extends StatelessWidget {
                     // const SizedBox(height: 32),
                     Row(
                       children: [
-                        hPad5,
+                        // hPad5,
                         IconButton(
                           onPressed: () => Navigator.of(context).pop(),
                           icon: const Icon(
@@ -40,10 +40,10 @@ class TermsConditionsScreen extends StatelessWidget {
                               'Terms & Conditions',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 24,
+                                fontSize: 22,
                                 fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w600,
-                                letterSpacing: -0.5,
+                                // letterSpacing: -0.5,
                               ),
                             ),
                           ),

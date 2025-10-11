@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/common/gaps.dart';
 
-
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
 
@@ -26,7 +25,7 @@ class AboutUsScreen extends StatelessWidget {
             left: 12,
             top: 48,
             child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white,),
+              icon: Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),
@@ -41,11 +40,9 @@ class AboutUsScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 22,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w600,
-                  height: 0.71,
-                  letterSpacing: -0.5,
                 ),
               ),
             ),
@@ -62,13 +59,13 @@ class AboutUsScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 32,
+                    fontSize: 22,
                     fontFamily: 'Outfit',
                     fontWeight: FontWeight.w400,
                     letterSpacing: 3.5,
                   ),
                 ),
-             vPad10,
+                vPad10,
                 Text(
                   'HEALTH  &  FITNESS  APP',
                   textAlign: TextAlign.center,
@@ -77,7 +74,7 @@ class AboutUsScreen extends StatelessWidget {
                     fontSize: 16,
                     fontFamily: 'Outfit',
                     fontWeight: FontWeight.w300,
-                    letterSpacing: 2.5,
+                    // letterSpacing: 2.5,
                   ),
                 ),
               ],
@@ -95,10 +92,10 @@ class AboutUsScreen extends StatelessWidget {
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 14,
                   fontFamily: 'Outfit',
                   fontWeight: FontWeight.w400,
-                  height: 1.5,
+                  // height: 1.5,
                 ),
               ),
             ),
@@ -109,7 +106,7 @@ class AboutUsScreen extends StatelessWidget {
             top: 451,
             child: Row(
               children: [
-                Icon(Icons.email, color: Colors.white, size: 20),
+                Icon(Icons.email, color: Colors.white),
                 SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,17 +115,17 @@ class AboutUsScreen extends StatelessWidget {
                       'Email',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                   vPad5,
+                    vPad5,
                     Text(
                       'Sam12345@gmail.com',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: 12,
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w400,
                       ),
@@ -144,8 +141,8 @@ class AboutUsScreen extends StatelessWidget {
             top: 503,
             child: Row(
               children: [
-                Icon(Icons.phone, color: Colors.white, size: 20),
-              hPad10,
+                Icon(Icons.phone, color: Colors.white),
+                hPad10,
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -153,17 +150,17 @@ class AboutUsScreen extends StatelessWidget {
                       'Cell',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                vPad5,
+                    vPad5,
                     Text(
                       '+8801777890990',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: 12,
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w400,
                       ),
@@ -205,7 +202,7 @@ class AboutUsScreen extends StatelessWidget {
                       'App Version',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w600,
                       ),
@@ -215,7 +212,7 @@ class AboutUsScreen extends StatelessWidget {
                       '0.1',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: 12,
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w400,
                       ),
@@ -229,4 +226,4 @@ class AboutUsScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}

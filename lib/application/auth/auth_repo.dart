@@ -237,6 +237,46 @@ class AuthRepo {
     }
   }
 
+  Future<Attempt<UserProfile>> updateProfile({
+    required String token,
+    required String language,
+    required UserProfile userProfile,
+  }) async {
+    final String url = '$baseUrl/profile/patch_profile_english/';
+
+    // Set the headers for the request
+    final Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    };
+
+    try {
+      // Send the POST request
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(userProfile.toJson()),
+      );
+
+      // Check the status of the response
+      if (response.statusCode == 200) {
+        // If the server responds with a 200 OK, parse the response
+        return success(UserProfile.fromJson(json.decode(response.body)));
+      } else if (response.statusCode == 401) {
+        return failed(SessionExpired());
+      } else {
+        throw Exception('Failed to log in: ${response.body}');
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      dPrint(e.toString());
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
+
   Future<Attempt<UserInfo>> getUserInfo({
     required String token,
     required String language,

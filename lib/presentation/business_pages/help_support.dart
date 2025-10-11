@@ -44,10 +44,10 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                             'Help & Support',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 22,
                               fontFamily: 'Outfit',
                               fontWeight: FontWeight.w600,
-                              letterSpacing: -0.5,
+                              // letterSpacing: -0.5,
                             ),
                           ),
                         ),
@@ -153,7 +153,7 @@ class _HelpAndSupportScreenState extends State<HelpAndSupportScreen> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: const Color(0xFF263133),
-                                          fontSize: 23,
+                                          fontSize: 18,
                                           fontFamily: 'Outfit',
                                           fontWeight: FontWeight.w700,
                                           height: 0.96,

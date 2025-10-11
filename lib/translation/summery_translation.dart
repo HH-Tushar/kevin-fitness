@@ -1,5 +1,5 @@
 abstract class SummaryTranslation {
-  String get title;
+  String get summery;
   String get weightTracking;
   String get progressOverview;
   String get weightChangeComparison;
@@ -16,7 +16,7 @@ abstract class SummaryTranslation {
 }
 
 class SummaryEnglish implements SummaryTranslation {
-  @override String get title => "Summary";
+  @override String get summery => "Summary";
   @override String get weightTracking => "Weight Tracking";
   @override String get progressOverview => "Progress Overview";
   @override String get weightChangeComparison => "Weight Change Comparison";
@@ -33,7 +33,7 @@ class SummaryEnglish implements SummaryTranslation {
 }
 
 class SummarySpanish implements SummaryTranslation {
-  @override String get title => "Resumen";
+  @override String get summery => "Resumen";
   @override String get weightTracking => "Seguimiento de Peso";
   @override String get progressOverview => "Resumen de Progreso";
   @override String get weightChangeComparison => "Comparación de cambio de peso";

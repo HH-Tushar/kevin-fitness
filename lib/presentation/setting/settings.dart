@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/application/auth/auth_controller.dart';
+import 'package:kenvinorellana/presentation/auth/view/login_screen.dart';
 import '../profile/edit_profile/edit_profile.dart';
 import '../subscribe_plan/plan_update.dart';
+import '../summery/summery.dart';
 import '/common/colors.dart';
 import '/common/gaps.dart';
 import '/common/navigator.dart';
@@ -192,7 +194,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       _buildMenuItem(
                         icon: Icons.bar_chart,
                         title: translator.profileSummary,
-                        onTap: () {},
+                        onTap: () {
+                          animatedNavigateTo(context, SummeryView());
+                        },
                       ),
                       _buildMenuItem(
                         icon: Icons.language,
@@ -280,7 +284,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         title: translator.logOut,
                         // isLast: true,
                         onTap: () {
-                          _showLogoutDialog(
+                          final feedback = _showLogoutDialog(
                             cancel: translator.cancel,
                             content: translator.logoutDialogMessage,
                             logout: translator.logOut,

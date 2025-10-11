@@ -44,7 +44,16 @@ void _showLogoutDialog({
           ),
           TextButton(
             onPressed: () async {
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
+
+              final feedback = await Provider.of<AuthController>(
+                context,
+                listen: false,
+              ).logout();
+              if (feedback && context.mounted) {
+                navigateReplaceAll(context, LoginScreen());
+              }
+
               // Clear all secure storage data
               // await SecureStorageService.clearAll();
               // GoRouter.of(context).go('/login');
@@ -160,7 +169,9 @@ void _showDeleteAccountDialog({
                         ),
                         padding: EdgeInsets.symmetric(vertical: 16),
                       ),
-                      onPressed: isDeleting ? null : () {},
+                      onPressed: isDeleting ? null : () {
+                        
+                      },
                       child: isDeleting
                           ? SizedBox(
                               width: 20,

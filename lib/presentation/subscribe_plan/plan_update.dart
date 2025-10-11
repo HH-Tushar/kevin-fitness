@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/common/gaps.dart';
+import 'package:kenvinorellana/common/navigator.dart';
+import 'package:kenvinorellana/common/snack_bar.dart';
 import 'package:provider/provider.dart';
 
-import '../../application/auth/models/package_model.dart';
+import '../../application/subscription/subscription_model.dart';
+import '../../application/subscription/subscription_repo.dart';
 import '../../common/shimmer_loading.dart';
+import '../../env.dart';
 import '../../translation/localization.dart';
+import 'stripe_payment_webview.dart';
 
 part 'components/error.dart';
 part 'components/loading.dart';
@@ -18,9 +23,55 @@ class UpgradePlanScreen extends StatefulWidget {
 }
 
 class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
+  final SubscriptionRepo subscriptionRepo = SubscriptionRepo();
+  SubscriptionModel? subscriptionModel;
   int selectedPlan = 1; // 0 for monthly, 1 for yearly
-  PackageList? list;
+  // PackageList? list;
   bool isLoading = false;
+  bool isLoadingStripe = false;
+
+  void fetchList() async {
+    setState(() {
+      isLoading = true;
+    });
+    final (data, error) = await subscriptionRepo.getPackages();
+    if (data != null) {
+      subscriptionModel = data;
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  void buyNow() async {
+    setState(() {
+      isLoadingStripe = true;
+    });
+
+    final priceId = subscriptionModel!.results[selectedPlan].priceId;
+    final (data, error) = await subscriptionRepo.createCheckoutSession(
+      priceId: priceId,
+    );
+    if (data != null) {
+      animatedNavigateTo(context, StripePaymentWebView(url: data));
+    } else {
+      showToast(
+        context: context,
+        title: error?.title ?? "Please try again later",
+        isSuccess: false,
+      );
+    }
+
+    setState(() {
+      isLoadingStripe = false;
+    });
+  }
+
+  @override
+  void initState() {
+    fetchList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,16 +114,15 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
                           translator.title,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: 22,
                             fontFamily: 'Outfit',
                             fontWeight: FontWeight.w600,
-                            height: 0.71,
-                            letterSpacing: -0.5,
                           ),
                         ),
                       ),
                     ),
                     hPad20,
+                    hPad10,
                   ],
                 ),
                 vPad20,
@@ -88,7 +138,7 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
                           translator.unlockPremium,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 28,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -118,7 +168,7 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
                         // Pricing Cards
                         isLoading
                             ? _buildShimmerCards()
-                            : !isLoading && list == null
+                            : !isLoading && subscriptionModel == null
                             ? _buildErrorWidget(
                                 context,
                                 translator.errorLoading,
@@ -133,20 +183,24 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
 
                                   children: [
                                     ...List.generate(
-                                      list?.results.length ?? 0,
-                                      (index) => GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedPlan = 0;
-                                          });
-                                        },
-                                        child: _buildPricingCard(
-                                          package: list!.results[index],
-                                          price: '\$4.99/',
-                                          period: 'month',
-                                          isSelected: selectedPlan == 0,
-                                        ),
-                                      ),
+                                      subscriptionModel?.results.length ?? 0,
+                                      (index) {
+                                        final item =
+                                            subscriptionModel?.results[index];
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPlan = index;
+                                            });
+                                          },
+                                          child: _buildPricingCard(
+                                            package: item!,
+                                            // price: '\$4.99/',
+                                            // period: 'month',
+                                            isSelected: selectedPlan == index,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -158,9 +212,11 @@ class _UpgradePlanScreenState extends State<UpgradePlanScreen> {
                           width: double.infinity,
                           height: 55,
                           child: ElevatedButton(
-                            onPressed: () {
-                              // Handle join now action
-                            },
+                            onPressed: isLoading || isLoadingStripe
+                                ? null
+                                : () {
+                                    buyNow();
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFB8C5C5),
                               shape: RoundedRectangleBorder(

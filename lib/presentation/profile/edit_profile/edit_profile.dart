@@ -30,7 +30,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
     setState(() {
       isLoading = true;
     });
-    profile = Provider.of<AuthController>(context, listen: false).userProfile;
+    profile = UserProfile.fromJson(
+      Provider.of<AuthController>(context, listen: false).userProfile!.toJson(),
+    );
 
     print(profile?.abdominal);
     setState(() {
@@ -40,36 +42,16 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
   Future<void> update() async {
     // profile.weight = _weightController.text;
-    final UserProfile updateDate = UserProfile(
-      id: profile!.id,
-      image: profile!.image,
-      atHome: profile!.atHome,
-      atGym: profile!.atGym,
-      martialArts: profile!.martialArts,
-      running: profile!.running,
-      otherSports: profile!.otherSports,
-      allergies: profile!.allergies,
-      foodPreference: profile!.foodPreference,
-      medicalConditions: profile!.medicalConditions,
-      fitnessGoals: profile!.fitnessGoals,
-      fullname: profile!.fullname,
-      gender: profile!.gender,
-      dateOfBirth: profile!.dateOfBirth,
-      weight: profile!.weight,
-      height: profile!.height,
-      abdominal: profile!.abdominal,
-      sacroiliac: profile!.sacroiliac,
-      subscapularis: profile!.subscapularis,
-      triceps: profile!.triceps,
-      fitnessLevel: profile!.fitnessLevel,
-      trainer: profile!.trainer,
-      trainDuration: profile!.trainDuration,
-      interestedWorkout: profile!.interestedWorkout,
-      injuriesDiscomfort: profile!.injuriesDiscomfort,
-      routineDuration: profile!.routineDuration,
-      dietaryPreferences: profile!.dietaryPreferences,
-      lifestyleHabits: profile!.lifestyleHabits,
-      user: profile!.user,
+
+    final (
+      data,
+      error,
+    ) = await Provider.of<AuthController>(context, listen: false).updateProfile(
+      language: Provider.of<LanguageProvider>(
+        context,
+        listen: false,
+      ).currentLanguage,
+      userProfile: profile!,
     );
   }
 
@@ -89,7 +71,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
   @override
   Widget build(BuildContext context) {
     final LanguageProvider languageProvider = context.watch();
+
     final translator = languageProvider.profileUpdateTranslation;
+    final translator2 = languageProvider.basicInfoTranslation;
     // final translator = languageProvider.profileUpdateTranslation;
     return Scaffold(
       body: SafeArea(
@@ -168,7 +152,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         items: ['1 Month', '2 Months', '3 Months', '6 Months'],
                         onChanged: (value) {
                           if (value != null) {
-                            profile?.interestedWorkout = value;
+                            setState(() {
+                              profile?.routineDuration = value;
+                            });
                           }
                         },
                       ),
@@ -185,7 +171,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           'Advanced',
                         ],
                         onChanged: (value) {
-                          profile?.fitnessLevel = value ?? "Beginner";
+                          setState(() {
+                            profile?.fitnessLevel = value ?? "Beginner";
+                          });
                         },
                       ),
                     ),
@@ -197,7 +185,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         items: ['At gym', 'At home', 'Outdoor', 'Mixed'],
                         onChanged: (value) {
                           if (value != null) {
-                            profile?.trainer = value;
+                            setState(() {
+                              profile?.trainer = value;
+                            });
                           }
                         },
                       ),
@@ -211,6 +201,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         // controller: _injuriesController,
                         onChanged: (value) {
                           profile?.injuriesDiscomfort = value;
+                          setState(() {});
                         },
                         hint: translator.writeHere,
                       ),
@@ -232,6 +223,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         selectedValue: profile?.dietaryPreferences ?? "",
                         onChanged: (value) {
                           profile?.dietaryPreferences = value;
+                          setState(() {});
                         },
                       ),
                     ),
@@ -246,8 +238,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           {'key': 'dairy', 'label': translator.dairy},
                           {'key': 'shellfish', 'label': translator.shellfish},
                         ],
-                        selectedValues: {},
-                        onChanged: (values) {},
+                        selectedValues: profile?.allergies.toSet() ?? {},
+                        onChanged: (values) {
+                          // (profile?.allergies.contains(values.to))
+                          profile?.allergies = values.toList();
+                          setState(() {});
+                        },
                       ),
                     ),
 
@@ -261,8 +257,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           {'key': 'milk', 'label': translator.milk},
                           {'key': 'fish', 'label': translator.fish},
                         ],
-                        selectedValues: {},
-                        onChanged: (values) {},
+                        selectedValues: profile?.foodPreference.toSet() ?? {},
+                        onChanged: (values) {
+                          profile?.foodPreference = values.toList();
+                          setState(() {});
+                        },
                       ),
                     ),
 
@@ -282,8 +281,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             'label': translator.heartDisease,
                           },
                         ],
-                        selectedValues: {},
-                        onChanged: (values) {},
+                        selectedValues:
+                            profile?.medicalConditions.toSet() ?? {},
+                        onChanged: (values) {
+                          profile?.medicalConditions = values.toList();
+                          setState(() {});
+                        },
                       ),
                     ),
 
@@ -332,6 +335,36 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             profile?.lifestyleHabits = value;
                           });
                         },
+                      ),
+                    ),
+
+                    vPad15,
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF343F41),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3.43),
+                          side: const BorderSide(
+                            color: Color(0xFF767781),
+                            width: 0.69,
+                          ),
+                        ),
+                        // padding: EdgeInsets.symmetric(
+                        //   horizontal: defaultPadding,
+                        // ),
+                      ),
+
+                      onPressed: () {
+                        update();
+                      },
+                      child: Text(
+                        translator2.submit,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: 'Outfit',
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
                   ],
