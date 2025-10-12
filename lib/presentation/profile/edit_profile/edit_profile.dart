@@ -42,7 +42,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
   Future<void> update() async {
     // profile.weight = _weightController.text;
-
+    setState(() {
+      isLoading = true;
+    });
     final (
       data,
       error,
@@ -53,6 +55,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
       ).currentLanguage,
       userProfile: profile!,
     );
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override

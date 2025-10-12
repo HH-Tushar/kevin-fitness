@@ -114,4 +114,41 @@ class SearchRepo {
       );
     }
   }
+
+  Future<Attempt<String>> reqMealPlan() async {
+    final String url = '$baseUrl/userapi/meal-plans/generate/';
+    final Map<String, String> headers = await getAuthHeaders();
+
+    try {
+      // Send the POST request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        // body: jsonEncode(workoutData),
+      );
+      if (response.statusCode == 201) {
+        final body = jsonDecode(response.body);
+        print(body);
+        return success("Successfully created Meal plan");
+      } else if (response.statusCode == 401) {
+        return failed(SessionExpired());
+      } else if (response.statusCode == 409) {
+        return failed(
+          Failure(
+            title:
+                "You already have an active meal plan. Please refresh the page if not visible.",
+            code: 409,
+          ),
+        );
+      } else {
+        throw Exception('Failed to log in: ${response.body}');
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
 }

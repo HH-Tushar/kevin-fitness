@@ -85,9 +85,10 @@ class DailyPlanRepo {
     }
   }
 
-  Future<Attempt<DailyWorkoutPlanDetails>> updateWorkoutPlanUnit({
+  Future<Attempt<bool>> updateWorkoutPlanUnit({
     required String token,
     required int id,
+    required bool isDone,
   }) async {
     final String url = '$baseUrl/userapi/workout/update-today-entry/$id/';
 
@@ -99,17 +100,58 @@ class DailyPlanRepo {
 
     try {
       // Send the POST request
-      final response = await http.patch(Uri.parse(url), headers: headers);
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({"completed": isDone}),
+      );
 
       // Check the status of the response
       if (response.statusCode == 200) {
-        print(jsonDecode(response.body));
-        // If the server responds with a 200 OK, parse the response
-        return success(
-          DailyWorkoutPlanDetails.fromJson(json.decode(response.body)),
-        );
+        final body = jsonDecode(response.body);
+        return success(body["completed"]);
       } else if (response.statusCode == 401) {
-        return failed(Failure(title: "Invalid Email or Password"));
+        return failed(SessionExpired());
+      } else {
+        throw Exception('Failed to log in: ${response.body}');
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      dPrint(e.toString());
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
+
+  Future<Attempt<bool>> updateMealPlanUnit({
+    required String token,
+    required int id,
+    required bool isDone,
+  }) async {
+    final String url = '$baseUrl/userapi/meals/entry/complete/$id/';
+
+    // Set the headers for the request
+    final Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    };
+
+    try {
+      // Send the POST request
+      final response = await http.patch(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode({"completed": isDone}),
+      );
+
+      // Check the status of the response
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        return success(body["completed"]);
+      } else if (response.statusCode == 401) {
+        return failed(SessionExpired());
       } else {
         throw Exception('Failed to log in: ${response.body}');
       }
@@ -153,7 +195,7 @@ class DailyPlanRepo {
     } on SocketException {
       return failed(InternetFailure());
     } catch (e) {
-      dPrint(e.toString());
+      // dPrint(e.toString());
       return failed(
         Failure(title: "Something went wrong. Please try again later."),
       );
@@ -313,6 +355,4 @@ class DailyPlanRepo {
       );
     }
   }
-
-  
 }

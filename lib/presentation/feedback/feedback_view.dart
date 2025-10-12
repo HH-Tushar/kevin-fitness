@@ -6,6 +6,7 @@ import '../../common/colors.dart';
 import '../../common/gaps.dart';
 import '../../translation/localization.dart';
 part 'components/inputs.dart';
+part 'components/data.dart';
 
 class FeedbackView extends StatefulWidget {
   const FeedbackView({super.key});
@@ -16,6 +17,16 @@ class FeedbackView extends StatefulWidget {
 
 class _FeedbackViewState extends State<FeedbackView> {
   bool isLoading = false;
+
+  void submit() async {
+    setState(() {
+      isLoading = true;
+    });
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final LanguageProvider languageProvider = context.watch();
@@ -152,7 +163,7 @@ class _FeedbackViewState extends State<FeedbackView> {
 
                     _buildSectionCard(
                       child: _buildRadioSection(
-                        title: translator.workoutConsistency,
+                        title: translator.mentalFeeling,
                         // question: "",
                         options: ["Happy", "Neutral", "Stressed"],
                         selectedValue: "Happy",

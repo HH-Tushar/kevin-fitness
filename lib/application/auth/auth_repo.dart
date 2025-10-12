@@ -3,7 +3,8 @@ import 'dart:io';
 
 import '/application/auth/models/user_info_models.dart';
 import '/env.dart';
-
+import 'package:http_parser/http_parser.dart';
+import 'dart:async';
 import '/common/api_handler.dart';
 import 'package:http/http.dart' as http;
 import 'models/user_credential.dart';
@@ -241,6 +242,7 @@ class AuthRepo {
     required String token,
     required String language,
     required UserProfile userProfile,
+    File? image,
   }) async {
     final String url = '$baseUrl/profile/patch_profile_english/';
 
@@ -251,16 +253,47 @@ class AuthRepo {
     };
 
     try {
-      // Send the POST request
-      final response = await http.patch(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonEncode(userProfile.toJson()),
-      );
+      http.Response response;
+      //if have image
+      if (image != null) {
+        final request = http.MultipartRequest('PATCH', Uri.parse(url));
+        request.headers['Authorization'] = headers['Authorization']!;
+        final fileStream = http.ByteStream(image.openRead());
+        final fileLength = await image.length();
+        final multipartFile = http.MultipartFile(
+          'image',
+          fileStream,
+          fileLength,
+          filename: image.path.split('/').last,
+          contentType: MediaType('image', 'jpeg'),
+        );
+        request.files.add(multipartFile);
+
+        final dataWithoutImage = Map<String, dynamic>.from(
+          userProfile.toJson(),
+        );
+        dataWithoutImage.remove('image');
+
+        dataWithoutImage.forEach((key, value) {
+          if (value != null && value.toString().isNotEmpty) {
+            request.fields[key] = value.toString();
+          }
+        });
+
+        final streamedResponse = await request.send().timeout(
+          const Duration(seconds: 30),
+        );
+        response = await http.Response.fromStream(streamedResponse);
+      } else {
+        response = await http.patch(
+          Uri.parse(url),
+          headers: headers,
+          body: jsonEncode(userProfile.toJson()),
+        );
+      }
 
       // Check the status of the response
       if (response.statusCode == 200) {
-        // If the server responds with a 200 OK, parse the response
         return success(UserProfile.fromJson(json.decode(response.body)));
       } else if (response.statusCode == 401) {
         return failed(SessionExpired());

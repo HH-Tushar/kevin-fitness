@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:kenvinorellana/application/daily_plan/search_repo.dart';
+import 'package:kenvinorellana/common/snack_bar.dart';
 import 'package:kenvinorellana/presentation/feedback/feedback_view.dart';
 import '../../../common/shimmer_loading.dart';
 import '../data_feed/plan_data.dart';
@@ -23,6 +25,7 @@ class PlanGeneratorView extends StatefulWidget {
 }
 
 class _PlanGeneratorViewState extends State<PlanGeneratorView> {
+  final SearchRepo searchRepo = SearchRepo();
   bool isLoading = false;
   void recheck() async {
     setState(() {
@@ -43,6 +46,30 @@ class _PlanGeneratorViewState extends State<PlanGeneratorView> {
         isLoading = false;
       });
     }
+  }
+
+  void requestMealPlan() async {
+    setState(() {
+      isLoading = true;
+    });
+    final (data, error) = await searchRepo.reqMealPlan();
+
+    if (data != null) {
+      recheck();
+      showToast(context: context, title: data, isSuccess: true);
+    } else {
+      if (error?.code == 409) {
+        recheck();
+      }
+      showToast(
+        context: context,
+        title: error?.title ?? "Please retry again later.",
+        isSuccess: false,
+      );
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -130,7 +157,9 @@ class _PlanGeneratorViewState extends State<PlanGeneratorView> {
                                   icon: Icons.restaurant,
                                   iconBg: const Color(0xFF134E48),
                                   label: planGen.aiDietPlan,
-                                  onTap: () {},
+                                  onTap: () {
+                                    requestMealPlan();
+                                  },
                                   isLoading: false,
                                 ),
                               ],

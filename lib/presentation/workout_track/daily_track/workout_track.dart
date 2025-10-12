@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/common/navigator.dart';
 import 'package:kenvinorellana/presentation/workout_track/workout_details/workout_details.dart';
+import 'package:kenvinorellana/translation/localization.dart';
 import 'package:provider/provider.dart';
 import '../../../providers/daily_plan_provider.dart';
 import '/common/colors.dart';
@@ -16,6 +17,9 @@ class WorkOutTrackView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DailyPlanProvider dailyPlanProvider = context.watch();
+    final LanguageProvider lan = context.watch();
+    final status = dailyPlanProvider.todayWorkoutPlan?.status;
+    final translator = lan.homeTranslation;
     return Scaffold(
       backgroundColor: customGrey,
       body: Stack(
@@ -61,7 +65,7 @@ class WorkOutTrackView extends StatelessWidget {
             left: 30,
             top: 155,
             child: Text(
-              'Todays Workout Plan',
+              translator.todayWorkoutPlan,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -95,17 +99,6 @@ class WorkOutTrackView extends StatelessWidget {
                     ],
                   ),
 
-                  // child: Padding(
-                  //   padding: EdgeInsets.only(top: 33, left: 70, right: 70),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: const [
-                  //       _MacroStat(value: '280g', label: 'Protein'),
-                  //       _MacroStat(value: '35g', label: 'Carbs'),
-                  //       _MacroStat(value: '12g', label: 'Fat'),
-                  //     ],
-                  //   ),
-                  // ),
                   padding: EdgeInsets.symmetric(
                     vertical: 20,
                     horizontal: defaultPadding * 3,
@@ -114,30 +107,26 @@ class WorkOutTrackView extends StatelessWidget {
                     children: [
                       vPad10,
 
-                      // Text(
-                      //   "20000",
-                      //   style: TextStyle(
-                      //     fontSize: 27,
-                      //     color: customWhite,
-                      //     fontWeight: FontWeight.w600,
-                      //   ),
-                      // ),
-                      // Text(
-                      //   "of 2000 calories",
-                      //   style: TextStyle(
-                      //     fontSize: 15,
-                      //     color: customWhite,
-                      //     // fontWeight: FontWeight.w600,
-                      //   ),
-                      // ),
-                      // vPad20,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         spacing: 20,
-                        children: const [
-                          _MacroStat(value: '15 mins', label: 'Duration'),
-                          _MacroStat(value: '11', label: 'Exercise'),
-                          _MacroStat(value: '100', label: 'Calories'),
+                        children: [
+                          _MacroStat(
+                            value:
+                                "${status?.totalCaloriesBurn.toStringAsFixed(0)} mins",
+                            label: translator.duration,
+                          ),
+                          _MacroStat(
+                            value:
+                                status?.totalWorkout.toStringAsFixed(0) ?? "0",
+                            label: translator.exercise,
+                          ),
+                          _MacroStat(
+                            value:
+                                status?.totalCaloriesBurn.toStringAsFixed(0) ??
+                                "0",
+                            label: translator.calorieCount,
+                          ),
                         ],
                       ),
                       vPad35,
@@ -146,7 +135,7 @@ class WorkOutTrackView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Progress",
+                            translator.progress,
                             style: TextStyle(
                               fontSize: 13,
                               color: customGreyText,
@@ -156,7 +145,7 @@ class WorkOutTrackView extends StatelessWidget {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "15",
+                                  text: status?.totalCompletedDays.toString(),
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -164,7 +153,7 @@ class WorkOutTrackView extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: "/20 days",
+                                  text: "/15 days",
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: customGreyText,
@@ -176,25 +165,36 @@ class WorkOutTrackView extends StatelessWidget {
                         ],
                       ),
                       vPad10,
-                      Stack(
-                        children: [
-                          Container(
-                            height: 10,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: customGreyText,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          Container(
-                            height: 10,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color: customDeepPurple,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ],
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final double fraction =
+                              ((status?.totalCompletedDays ?? 15) / 15).clamp(
+                                0.0,
+                                1.0,
+                              );
+
+                          final width = constraints.maxWidth * fraction;
+                          return Stack(
+                            children: [
+                              Container(
+                                height: 10,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: customGreyText,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              Container(
+                                height: 10,
+                                width: width,
+                                decoration: BoxDecoration(
+                                  color: customDeepPurple,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       vPad10,
                     ],
@@ -210,7 +210,7 @@ class WorkOutTrackView extends StatelessWidget {
                       children: [
                         vPad5,
                         Text(
-                          "Today’s Workout Plan",
+                          translator.todayWorkoutPlan,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -252,7 +252,7 @@ class WorkOutTrackView extends StatelessWidget {
                                       duration: item.workout.timeNeeded,
                                       onTap: () {
                                         dailyPlanProvider.markWorkoutAsDone(
-                                          uniqueId: item.workout.uniqueId,
+                                          uniqueId: item.id ?? -1,
                                           contex: context,
                                         );
                                       },

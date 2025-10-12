@@ -59,14 +59,16 @@ class Status {
 class WorkoutElement {
   final int setOf;
   final int reps;
-   bool completed;
+  bool completed;
   final Workout workout;
+  final int? id;
 
   WorkoutElement({
     required this.setOf,
     required this.reps,
     required this.completed,
     required this.workout,
+    this.id,
   });
 
   factory WorkoutElement.fromRawJson(String str) =>
@@ -77,6 +79,7 @@ class WorkoutElement {
   factory WorkoutElement.fromJson(Map<String, dynamic> json) => WorkoutElement(
     setOf: json["set_of"],
     reps: json["reps"],
+    id: json["id"],
     completed: json["completed"],
     workout: Workout.fromJson(json["workout"]),
   );

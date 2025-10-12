@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -112,11 +113,13 @@ class AuthController extends ChangeNotifier {
   Future<Attempt<UserProfile>> updateProfile({
     required String language,
     required UserProfile userProfile,
+    File ?image,
   }) async {
     final (response, error) = await authRepo.updateProfile(
       language: language,
       token: accessToken!,
       userProfile: userProfile,
+      image:image
     );
     if (response != null) {
       _userProfile = response;

@@ -26,11 +26,18 @@ abstract class HomeTranslation {
   String get aIRecommendedTodayPlan;
   String get notYet;
   String get todayWorkoutPlan;
+  String get progress;
+  String get alreadyEaten;
+  String get duration;
 }
 
 class HomeEnglish implements HomeTranslation {
   @override
   String get title => "Home";
+  @override
+  String get progress => "Progress";
+  @override
+  String get alreadyEaten => "Already eaten";
   @override
   String get todayWorkoutPlan => "Today's Workout Plan";
   @override
@@ -83,9 +90,17 @@ class HomeEnglish implements HomeTranslation {
   String get done => "Done";
   @override
   String get upcoming => "Upcoming";
+  @override
+  String get duration => "Duration";
 }
 
 class HomeSpanish implements HomeTranslation {
+  @override
+  String get alreadyEaten => "ya comido";
+  @override
+  String get duration => "duración";
+  @override
+  String get progress => "progreso";
   @override
   String get title => "Inicio";
   @override

@@ -25,22 +25,22 @@ class _AiDataFeedState extends State<AiDataFeed> {
   bool isLoading = false;
 
   void postPlan() async {
-    Navigator.pop(context, true);
-    // setState(() {
-    //   isLoading = true;
-    // });
 
-    // final (data, error) = await repo.postWorkoutPlan(
-    //   workoutData: _dataSource._makeModel(),
-    // );
+    setState(() {
+      isLoading = true;
+    });
 
-    // if (data != null) {
-    //   showToast(context: context, title: data, isSuccess: true);
-    //   Navigator.pop(context,true);
-    // }
-    // setState(() {
-    //   isLoading = false;
-    // });
+    final (data, error) = await repo.postWorkoutPlan(
+      workoutData: _dataSource._makeModel(),
+    );
+
+    if (data != null) {
+      showToast(context: context, title: data, isSuccess: true);
+      Navigator.pop(context,true);
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override

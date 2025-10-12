@@ -112,59 +112,93 @@ class DailyPlanProvider extends ChangeNotifier {
   }
 
   Future<void> markWorkoutAsDone({
-    required String uniqueId,
+    required int uniqueId,
     required BuildContext contex,
   }) async {
+    if (uniqueId == -1) return;
+
     final index = todayWorkoutPlan?.workouts.indexWhere(
-      (e) => e.workout.uniqueId == uniqueId,
+      (e) => e.id == uniqueId,
     );
     if (index != null && index != -1) {
-      //call api
-      // final (data, error) = await dailyPlanRepo.updateWorkoutPlanUnit(
-      //   id: uniqueId,
-      //   token: Provider.of<AuthController>(context, listen: false).accessToken!,
-      // );
-      //if success
-
-      todayWorkoutPlan!.workouts[index].completed =
-          !todayWorkoutPlan!.workouts[index].completed;
-
-      print(todayWorkoutPlan!.workouts[index].completed);
-      notifyListeners();
-      //show toast
-      showToast(
-        context: contex,
-        title: "Successfully updated the workout plan",
-        isSuccess: true,
+      // call api
+      final (data, error) = await dailyPlanRepo.updateWorkoutPlanUnit(
+        id: uniqueId,
+        token: Provider.of<AuthController>(context, listen: false).accessToken!,
+        isDone:        !todayWorkoutPlan!.workouts[index].completed,
       );
+      //if success
+      if (data != null) {
+        todayWorkoutPlan!.workouts[index].completed = data;
+
+        print(todayWorkoutPlan!.workouts[index].completed);
+        notifyListeners();
+        //show toast
+        showToast(
+          context: contex,
+          title: "Successfully updated the workout plan",
+          isSuccess: true,
+        );
+      }
     }
   }
-
   Future<void> markMealPlanAsDone({
-    required String uniqueId,
+    required int uniqueId,
     required BuildContext contex,
   }) async {
+    if (uniqueId == -1) return;
+
     final index = todayMealPlan?.todayMeals.indexWhere(
-      (e) => e.recipe.uniqueId == uniqueId,
+      (e) => e.id == uniqueId,
     );
     if (index != null && index != -1) {
-      //call api
-
-      //if success
-
-      todayMealPlan!.todayMeals[index].completed =
-          !todayMealPlan!.todayMeals[index].completed;
-
-      print(todayMealPlan!.todayMeals[index].completed);
-      notifyListeners();
-      //show toast
-      showToast(
-        context: contex,
-        title: "Successfully updated the workout plan",
-        isSuccess: true,
+      // call api
+      final (data, error) = await dailyPlanRepo.updateMealPlanUnit(
+        id: uniqueId,
+        token: Provider.of<AuthController>(context, listen: false).accessToken!,
+        isDone: !todayMealPlan!.todayMeals[index].completed,
       );
+      //if success
+      if (data != null) {
+        todayMealPlan!.todayMeals[index].completed = data;
+
+        print(todayMealPlan!.todayMeals[index].completed);
+        notifyListeners();
+        //show toast
+        showToast(
+          context: contex,
+          title: "Successfully updated the workout plan",
+          isSuccess: true,
+        );
+      }
     }
   }
+
+  // Future<void> markMealPlanAsDone({
+  //   required int uniqueId,
+  //   required BuildContext contex,
+  // }) async {
+  //   final index = todayMealPlan?.todayMeals.indexWhere(
+  //     (e) => e.recipe.id == uniqueId,
+  //   );
+  //   if (index != null && index != -1) {
+  //     //call api
+
+  //     //if success
+
+  //     todayMealPlan!.todayMeals[index].completed =
+  //         !todayMealPlan!.todayMeals[index].completed;
+
+  //     print(todayMealPlan!.todayMeals[index].completed);
+  //     notifyListeners();
+  //     //show toast
+  //     showToast(
+  //       context: contex,
+  //       title: "Successfully updated the workout plan",
+  //       isSuccess: true,
+  //     );
+  //   }
+  // }
 
   Future<void> fetchDailyPlan({
     DateTime? date,

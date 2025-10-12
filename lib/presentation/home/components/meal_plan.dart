@@ -48,7 +48,7 @@ class _MealIdeaSection extends StatelessWidget {
                               : translator.notYet,
                           title: item?.mealType ?? "",
                           button: item?.completed == true
-                              ? ""
+                              ? translator.alreadyEaten
                               : translator.eatNow,
                           statusColor: item?.completed == true
                               ? customLightBlue

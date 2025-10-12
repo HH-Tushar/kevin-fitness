@@ -296,7 +296,7 @@ class MealPlanDayScreen extends StatelessWidget {
                                       calories: item.recipe.calories,
                                       onTap: () {
                                         dailyPlanProvider.markMealPlanAsDone(
-                                          uniqueId: item.recipe.uniqueId,
+                                          uniqueId: item.id,
                                           contex: context,
                                         );
                                       },
