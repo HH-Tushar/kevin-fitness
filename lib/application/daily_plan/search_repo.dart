@@ -14,7 +14,7 @@ class SearchRepo {
     // required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/userapi/recipes/';
+    final String url = '$baseUrl/userapi/$language/recipes/';
 
     // Set the headers for the request
     final Map<String, String> headers = await getAuthHeaders();
@@ -49,7 +49,7 @@ class SearchRepo {
     // required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/userapi/all/workouts/';
+    final String url = '$baseUrl/userapi/all/$language/workouts/';
 
     // Set the headers for the request
     final Map<String, String> headers = await getAuthHeaders();
@@ -104,7 +104,8 @@ class SearchRepo {
       } else if (response.statusCode == 401) {
         return failed(SessionExpired());
       } else {
-        throw Exception('Failed to log in: ${response.body}');
+        final body = jsonDecode(response.body);
+        return failed(Failure(title: body["detail"],code: response.statusCode));
       }
     } on SocketException {
       return failed(InternetFailure());

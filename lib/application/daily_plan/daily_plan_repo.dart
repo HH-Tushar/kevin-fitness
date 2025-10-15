@@ -17,7 +17,7 @@ class DailyPlanRepo {
     required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/userapi/plans/today/';
+    final String url = '$baseUrl/userapi/$language/plans/today/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -52,7 +52,7 @@ class DailyPlanRepo {
     required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/userapi/workouts/today/';
+    final String url = '$baseUrl/userapi/$language-workouts/today/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -169,7 +169,7 @@ class DailyPlanRepo {
     required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/userapi/meals/today/';
+    final String url = '$baseUrl/userapi/meals/today/$language/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -207,7 +207,7 @@ class DailyPlanRepo {
     required String language,
     required int id,
   }) async {
-    final String url = '$baseUrl/userapi/meal/day/$id/';
+    final String url = '$baseUrl/userapi/meal/day/$language/$id/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -245,7 +245,7 @@ class DailyPlanRepo {
     required String language,
     required int id,
   }) async {
-    final String url = '$baseUrl/userapi/daily-workout/details/$id/';
+    final String url = '$baseUrl/userapi/details/$language-daily-workout/$id/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -284,7 +284,7 @@ class DailyPlanRepo {
     required int id,
   }) async {
     // userapi/spanish/meal-plan/daywise/$id/
-    final String url = '$baseUrl/userapi/spanish/meal-plan/daywise/$id/';
+    final String url = '$baseUrl/userapi/meal-plan/daywise/$language/$id/';
 
     // Set the headers for the request
     final Map<String, String> headers = {

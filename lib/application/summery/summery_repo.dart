@@ -34,6 +34,36 @@ class SummeryRepo {
     }
   }
 
+  Future<Attempt<String>> postFeedback(Map<String, dynamic> data) async {
+    final String url = '$baseUrl/userapi/create/';
+    final Map<String, String> headers = await getAuthHeaders();
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 201) {
+        final body = jsonDecode(response.body);
+        print(body);
+        return success("Successfully updated the data");
+      } else if (response.statusCode == 401) {
+        return failed(SessionExpired());
+      } else {
+        final body = jsonDecode(response.body);
+        return failed(Failure(title: body["error"]));
+        // throw Exception('Failed to fetch Data: ${response.body}');
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
+
   Future<Attempt<UserAchievementModel>> getUserFeedback() async {
     final String url = '$baseUrl/userapi/user/feedback/';
 

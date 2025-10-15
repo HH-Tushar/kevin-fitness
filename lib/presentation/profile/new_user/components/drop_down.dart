@@ -6,7 +6,7 @@ class ProfileDropdownField extends StatelessWidget {
   final List<String> items;
   final String value;
   final ValueChanged<String> onChanged;
-
+  final Function(String?) validator;
   const ProfileDropdownField({
     super.key,
     required this.icon,
@@ -14,6 +14,7 @@ class ProfileDropdownField extends StatelessWidget {
     required this.items,
     required this.value,
     required this.onChanged,
+    required this.validator,
   });
 
   @override
@@ -30,6 +31,7 @@ class ProfileDropdownField extends StatelessWidget {
           SizedBox(width: 10.0),
           Expanded(
             child: DropdownButtonFormField<String>(
+              validator: (value) => validator(value),
               initialValue: value.isEmpty ? null : value,
               decoration: InputDecoration(
                 hintText: hint,
@@ -87,7 +89,7 @@ class DatePickerField extends StatefulWidget {
   final IconData icon;
   final String hint;
   final String value; // Current selected date string (passed by parent)
-  final ValueChanged<String> onDateChanged; // Callback to update parent state
+  final ValueChanged<DateTime> onDateChanged; // Callback to update parent state
 
   const DatePickerField({
     super.key,
@@ -146,7 +148,8 @@ class _DatePickerFieldState extends State<DatePickerField> {
         formattedDate =
             '${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}';
         // Use the callback to notify the parent widget of the change
-        widget.onDateChanged(formattedDate);
+        widget.onDateChanged(picked);
+        setState(() {});
       }
     } catch (e) {
       if (context.mounted) {
@@ -195,7 +198,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
                     children: [
                       Expanded(
                         child: Text(
-                          formattedDate.isEmpty ? widget.hint : widget.value,
+                          formattedDate.isEmpty ? widget.hint : formattedDate,
                           style: TextStyle(
                             color: const Color(0xFF767781),
                             // Replaced 16.sp

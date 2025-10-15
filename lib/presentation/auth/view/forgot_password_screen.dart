@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/common/app_bars.dart';
+import 'package:kenvinorellana/common/colors.dart';
 import 'package:kenvinorellana/common/gaps.dart';
 import 'package:kenvinorellana/common/navigator.dart';
 import 'package:kenvinorellana/common/snack_bar.dart';
@@ -51,6 +52,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: customWhite,
       appBar: childAppBar(context: context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding * 1.5),
@@ -63,7 +65,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 0.0),
+                  padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     'Reset your password',
                     style: TextStyle(

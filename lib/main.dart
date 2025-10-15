@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => LanguageProvider()),
-        ChangeNotifierProvider(create: (context) => AuthController()),
+        ChangeNotifierProvider(create: (context) => AuthController(context)),
         ChangeNotifierProvider(create: (context) => DailyPlanProvider(context)),
 
         // ChangeNotifierProxyProvider<LanguageProvider, DailyPlanProvider>(

@@ -4,12 +4,13 @@ class SkinfoldField extends StatelessWidget {
   final String label;
   final String value;
   final ValueChanged<String> onChanged;
-
+  final Function(String?) validator;
   const SkinfoldField({
     super.key,
     required this.label,
     required this.value,
     required this.onChanged,
+    required this.validator,
   });
 
   @override
@@ -32,6 +33,7 @@ class SkinfoldField extends StatelessWidget {
         TextFormField(
           initialValue: value,
           onChanged: onChanged,
+          validator:(e)=> validator(e),
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),

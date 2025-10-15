@@ -90,6 +90,7 @@ class WorkOutDropdownField extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
   final bool isExpanded;
+  final Function(String?) validator;
 
   const WorkOutDropdownField({
     super.key,
@@ -97,6 +98,7 @@ class WorkOutDropdownField extends StatelessWidget {
     required this.value,
     required this.items,
     required this.onChanged,
+    required this.validator,
     this.isExpanded = false,
   });
 
@@ -123,6 +125,7 @@ class WorkOutDropdownField extends StatelessWidget {
             ),
           ),
         DropdownButtonFormField<String>(
+          validator: (e) => validator(e),
           initialValue: value,
           isExpanded: isExpanded,
           items: items
@@ -262,130 +265,148 @@ class WorkOutForm extends StatelessWidget {
     final BasicInfoController controller = context.watch();
 
     return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 16.0),
-          Text(
-            'Workout Information',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20.0,
-              fontFamily: 'Outfit',
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 24.0),
-
-          WorkOutDropdownField(
-            label: 'Fitness Level',
-            value: controller.fitnessLevel,
-            items: const ['Beginners', 'Basic', 'Intermediate', 'High'],
-            onChanged: (e) => controller.fitnessLevel = e ?? "",
-          ),
-          SizedBox(height: 16.0),
-
-          // Where do you train? (Dropdown)
-          Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: WorkOutDropdownField(
-                  label: 'Where do you train?',
-                  value: controller.whereTrain,
-                  items: const [
-                    'At home',
-                    'At gym',
-                    'Martial arts',
-                    'Running',
-                    'Other sports',
-                  ],
-                  onChanged: (v) {
-                    controller.whereTrain = v ?? "";
-                    controller.updateSubOption();
-                    // onWhereTrainChanged(v);
-                    // Clear sub-options when the main location changes
-                    // onWhereTrainSubChanged([]);
-                  },
-                ),
+      child: Form(
+        key: controller.workoutFormKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 16.0),
+            Text(
+              'Workout Information',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20.0,
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w500,
               ),
-              SizedBox(width: 16.0),
-              const Expanded(flex: 2, child: SizedBox()),
-            ],
-          ),
-
-          // Sub-options based on whereTrain
-          if (controller.subOptions.isNotEmpty) ...[
-            SizedBox(height: 12.0),
-            MultiCheckboxList(
-              label: controller.subLabel,
-              options: controller.subOptions,
-              selected: controller.whereTrainSub,
-              onChanged: (e) {
-                controller.updateTrainingInstruments(e);
-              },
             ),
+            SizedBox(height: 24.0),
+
+            WorkOutDropdownField(
+              label: 'Fitness Level',
+              value: controller.fitnessLevel,
+              validator: CommonValidator.fieldRequired,
+              items: const ['Beginners', 'Basic', 'Intermediate', 'High'],
+              onChanged: (e) => controller.fitnessLevel = e ?? "",
+            ),
+            SizedBox(height: 16.0),
+
+            // Where do you train? (Dropdown)
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: WorkOutDropdownField(
+                    label: 'Where do you train?',
+                    value: controller.whereTrain,
+                    validator: CommonValidator.fieldRequired,
+                    items: const [
+                      'At home',
+                      'At gym',
+                      'Martial arts',
+                      'Running',
+                      'Other sports',
+                    ],
+                    onChanged: (v) {
+                      controller.whereTrain = v ?? "";
+                      controller.updateSubOption();
+                      // onWhereTrainChanged(v);
+                      // Clear sub-options when the main location changes
+                      // onWhereTrainSubChanged([]);
+                    },
+                  ),
+                ),
+                SizedBox(width: 16.0),
+                const Expanded(flex: 2, child: SizedBox()),
+              ],
+            ),
+
+            // Sub-options based on whereTrain
+            if (controller.subOptions.isNotEmpty) ...[
+              SizedBox(height: 12.0),
+              MultiCheckboxList(
+                label: controller.subLabel,
+                options: controller.subOptions,
+                selected: controller.whereTrainSub,
+                onChanged: (e) {
+                  controller.updateTrainingInstruments(e);
+                },
+              ),
+            ],
+            SizedBox(height: 16.0),
+
+            WorkOutDropdownField(
+              label: 'How long do you train?',
+              value: controller.howLongTrain,
+              validator: CommonValidator.fieldRequired,
+              items: const ['Less than 1 hour', 'More than 1 hour'],
+              onChanged: (e) => controller.howLongTrain = e ?? "",
+            ),
+            SizedBox(height: 16.0),
+
+            WorkOutDropdownField(
+              label: 'Interested for workout?',
+              value: controller.interestedWorkout,
+              validator: CommonValidator.fieldRequired,
+              items: const ['Lose Fat', 'Gain Muscle', 'Maintenance'],
+              onChanged: (e) => controller.interestedWorkout = e ?? "",
+              isExpanded: true,
+            ),
+            SizedBox(height: 16.0),
+
+            WorkOutTextField(
+              label: 'Do you have any injuries or discomfort?',
+              hint: 'Enter your injuries or discomfort',
+              value: controller.injuries,
+              onChanged: (e) => controller.injuries = e,
+            ),
+            SizedBox(height: 16.0),
+
+            WorkOutDropdownField(
+              label: 'How long do you interested for making routine?',
+              value: controller.routineDuration,
+              validator: CommonValidator.fieldRequired,
+              items: const [
+                '1 Month',
+                '2 Month',
+                '3 Month',
+                '6 Month',
+                '1 Year',
+              ],
+              onChanged: (e) => controller.routineDuration = e ?? "",
+            ),
+            SizedBox(height: 48.0),
+            Row(
+              spacing: defaultPadding,
+              children: [
+                Expanded(
+                  child: primaryFilledButton(
+                    onTap: () {
+                      controller.toggleStep(1);
+                    },
+                    title: "Previous",
+                    isEnable: true,
+                    bg: customGreyText,
+                  ),
+                ),
+                Expanded(
+                  child: primaryFilledButton(
+                    onTap: () {
+                      if (!controller.workoutFormKey.currentState!.validate()) {
+                        return;
+                      }
+
+                      controller.toggleStep(3);
+                    },
+                    title: "Next",
+                    isEnable: true,
+                  ),
+                ),
+              ],
+            ),
+            vPad35,
           ],
-          SizedBox(height: 16.0),
-
-          WorkOutDropdownField(
-            label: 'How long do you train?',
-            value: controller.howLongTrain,
-            items: const ['Less than 1 hour', 'More than 1 hour'],
-            onChanged: (e) => controller.howLongTrain = e ?? "",
-          ),
-          SizedBox(height: 16.0),
-
-          WorkOutDropdownField(
-            label: 'Interested for workout?',
-            value: controller.interestedWorkout,
-            items: const ['Lose Fat', 'Gain Muscle', 'Maintenance'],
-            onChanged: (e) => controller.interestedWorkout = e ?? "",
-            isExpanded: true,
-          ),
-          SizedBox(height: 16.0),
-
-          WorkOutTextField(
-            label: 'Do you have any injuries or discomfort?',
-            hint: 'Enter your injuries or discomfort',
-            value: controller.injuries,
-            onChanged: (e) => controller.injuries = e,
-          ),
-          SizedBox(height: 16.0),
-
-          WorkOutDropdownField(
-            label: 'How long do you interested for making routine?',
-            value: controller.routineDuration,
-            items: const ['1 Month', '2 Month', '3 Month', '6 Month', '1 Year'],
-            onChanged: (e) => controller.routineDuration = e ?? "",
-          ),
-          SizedBox(height: 48.0),
-          Row(
-            spacing: defaultPadding,
-            children: [
-              Expanded(
-                child: primaryFilledButton(
-                  onTap: () {
-                    controller.toggleStep(1);
-                  },
-                  title: "Previous",
-                  isEnable: true,
-                  bg: customGreyText,
-                ),
-              ),
-              Expanded(
-                child: primaryFilledButton(
-                  onTap: () {
-                    controller.toggleStep(3);
-                  },
-                  title: "Next",
-                  isEnable: true,
-                ),
-              ),
-            ],
-          ),
-          vPad35,
-        ],
+        ),
       ),
     );
   }

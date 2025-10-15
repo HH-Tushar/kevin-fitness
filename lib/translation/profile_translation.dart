@@ -9,7 +9,11 @@ abstract class ProfileUpdateTranslation {
   String get dietaryPreferences;
   String get dietaryQuestion;
   String get keto;
+  String get vegan;
+  String get vegetarian;
   String get paleo;
+  String get glutenFree;
+  // String get paleo;
   String get noPreferences;
   String get allergies;
   String get allergiesQuestion;
@@ -39,14 +43,31 @@ abstract class ProfileUpdateTranslation {
   String get kg;
   String get cm;
   String get oneMonth;
+  String get twoMonth;
+  String get threeMonth;
+  String get sixMonth;
+  String get oneYear;
   String get basic;
+  String get beginners;
+  String get intermediate;
+  String get high;
   String get atGym;
+  String get atHome;
+  String get atMartialArts;
+  String get atRunning;
+  String get atOthersports;
   String get updateProfile;
 }
 
 class ProfileUpdateEnglish implements ProfileUpdateTranslation {
   @override
   String get weight => "Weight";
+  @override
+  String get glutenFree => "Gluten-Free";
+  @override
+  String get vegetarian => "Vegetarian";
+  @override
+  String get vegan => "Vegan";
   @override
   String get height => "Height";
   @override
@@ -116,21 +137,45 @@ class ProfileUpdateEnglish implements ProfileUpdateTranslation {
   @override
   String get lifestyleQuestion => "How many times do you prefer to eat?";
   @override
-  String get threeMeals => "3 meals";
+  String get threeMeals => "3 Meals";
   @override
-  String get fourMeals => "4 meals";
+  String get fourMeals => "4 Meals";
   @override
-  String get fiveMeals => "5 meals";
+  String get fiveMeals => "5 Meals";
   @override
   String get kg => "kg";
   @override
   String get cm => "cm";
   @override
-  String get oneMonth => "1 month";
+  String get oneMonth => "1 Month";
+  @override
+  String get twoMonth => "2 Month";
+  @override
+  String get threeMonth => "3 Month";
+  @override
+  String get sixMonth => "6 Month";
+  @override
+  String get oneYear => "1 Year";
+
   @override
   String get basic => "Basic";
   @override
-  String get atGym => "At the gym";
+  String get beginners => "Beginners";
+  @override
+  String get intermediate => "Intermediate";
+  @override
+  String get high => "High";
+  @override
+  String get atGym => "At gym";
+
+  @override
+  String get atHome => "At home";
+  @override
+  String get atMartialArts => "Martial arts";
+  @override
+  String get atRunning => "Running";
+  @override
+  String get atOthersports => "Other sports";
   @override
   String get updateProfile => "Update Profile";
 }
@@ -138,6 +183,12 @@ class ProfileUpdateEnglish implements ProfileUpdateTranslation {
 class ProfileUpdateSpanish implements ProfileUpdateTranslation {
   @override
   String get weight => "Peso";
+  @override
+  String get glutenFree => "Sin gluten";
+  @override
+  String get vegetarian => "Vegetariano";
+  @override
+  String get vegan => "Vegano";
   @override
   String get height => "Altura";
   @override
@@ -218,11 +269,35 @@ class ProfileUpdateSpanish implements ProfileUpdateTranslation {
   @override
   String get cm => "cm";
   @override
-  String get oneMonth => "1 mes";
+  String get oneMonth => "1 Mes";
+  @override
+  String get twoMonth => "2 Meses";
+  @override
+  String get threeMonth => "3 Meses";
+  @override
+  String get sixMonth => "6 Meses";
+  @override
+  String get oneYear => "1 Año";
   @override
   String get basic => "Básico";
   @override
+  String get high => "Avanzado";
+  @override
+  String get intermediate => "Intermedio";
+  @override
+  String get beginners => "Principiante";
+  @override
   String get atGym => "En el gimnasio";
+
+  @override
+  String get atHome => "En casa";
+  @override
+  String get atMartialArts => "Artes marciales";
+  @override
+  String get atRunning => "Correr";
+  @override
+  String get atOthersports => "Otros deportes";
+
   @override
   String get updateProfile => "actualizarPerfil";
 }

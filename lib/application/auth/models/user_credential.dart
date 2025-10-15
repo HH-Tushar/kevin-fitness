@@ -32,14 +32,9 @@ class User {
   final int id;
   final String email;
   final String role;
-  final String name;
+  final String? name;
 
-  User({
-    required this.id,
-    required this.email,
-    required this.role,
-    required this.name,
-  });
+  User({required this.id, required this.email, required this.role, this.name});
 
   // factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
 

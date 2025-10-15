@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:kenvinorellana/application/auth/auth_controller.dart';
 import 'package:kenvinorellana/presentation/auth/view/login_screen.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import '../profile/edit_profile/edit_profile.dart';
 import '../subscribe_plan/plan_update.dart';
 import '../summery/summery.dart';
@@ -30,13 +31,25 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   File? localImage;
   String? imageUrl;
+  bool isUpdatingImage = false;
   void pickImage() async {
     final picker = ImagePicker();
     final picked = await picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {
       setState(() {
+        isUpdatingImage = true;
         localImage = File(picked.path);
       });
+      if (context.mounted) {
+        final data = await Provider.of<AuthController>(
+          context,
+          listen: false,
+        ).updateProfilePicture(image: localImage);
+
+        setState(() {
+          isUpdatingImage = false;
+        });
+      }
     }
   }
 
@@ -55,44 +68,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 // Profile Header
                 Row(
+                  // spacing: 5,
                   children: [
                     Stack(
                       children: [
-                        CircleAvatar(
-                          radius: 44,
-                          backgroundColor: Colors.white.withOpacity(0.08),
-                          backgroundImage:
-                              authController.userProfile?.image != null &&
-                                  authController.userProfile!.image.isNotEmpty
-                              ? NetworkImage(authController.userProfile!.image)
-                              : (localImage != null
-                                    ? FileImage(localImage!)
-                                    : null),
-                          onBackgroundImageError:
-                              (authController.userProfile?.image != null &&
-                                      authController
-                                          .userProfile!
-                                          .image
-                                          .isNotEmpty) ||
-                                  localImage != null
-                              ? (exception, stackTrace) {
-                                  // Fallback to default icon if network image fails
-                                }
-                              : null,
-                          child:
-                              (authController.userProfile?.image == null ||
-                                      authController
-                                          .userProfile!
-                                          .image
-                                          .isEmpty) &&
-                                  localImage == null
-                              ? Icon(
-                                  Icons.person,
-                                  size: 54,
-                                  color: Colors.white.withOpacity(0.7),
-                                )
-                              : null,
-                        ),
+                        isUpdatingImage
+                            ? Shimmer(
+                                child: Container(
+                                  height: 88,
+                                  width: 88,
+                                  decoration: BoxDecoration(
+                                    // shape: BoxShape.circle,
+                                    borderRadius: BorderRadius.circular(88),
+                                    color: customTeal,
+                                  ),
+                                  // child: Shimmer(child: hPad10),
+                                ),
+                              )
+                            : CircleAvatar(
+                                radius: 44,
+                                backgroundColor: Colors.white.withOpacity(0.08),
+                                backgroundImage:
+                                    authController.userProfile?.image != null &&
+                                        authController
+                                            .userProfile!
+                                            .image!
+                                            .isNotEmpty
+                                    ? NetworkImage(
+                                        authController.userProfile!.image!,
+                                      )
+                                    : (localImage != null
+                                          ? FileImage(localImage!)
+                                          : null),
+                                onBackgroundImageError:
+                                    (authController.userProfile?.image !=
+                                                null &&
+                                            authController
+                                                .userProfile!
+                                                .image!
+                                                .isNotEmpty) ||
+                                        localImage != null
+                                    ? (exception, stackTrace) {
+                                        // Fallback to default icon if network image fails
+                                      }
+                                    : null,
+                                child:
+                                    (authController.userProfile?.image ==
+                                                null ||
+                                            authController
+                                                .userProfile!
+                                                .image!
+                                                .isEmpty) &&
+                                        localImage == null
+                                    ? Icon(
+                                        Icons.person,
+                                        size: 54,
+                                        color: Colors.white.withOpacity(0.7),
+                                      )
+                                    : null,
+                              ),
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -115,7 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(width: 20),
+                    hPad15,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,8 +176,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
+
+                    hPad10,
                     GestureDetector(
-                      onTap: () => navigateTo(context, UpdateProfile()),
+                      onTap: authController.isFetchingLanguageChanges
+                          ? null
+                          : () => navigateTo(context, UpdateProfile()),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
@@ -156,14 +194,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Text(
-                          translator.edit,
-                          style: TextStyle(
-                            fontFamily: "Outfit",
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: authController.isFetchingLanguageChanges
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(),
+                              )
+                            : Text(
+                                translator.edit,
+                                style: TextStyle(
+                                  fontFamily: "Outfit",
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
                       ),
                     ),
                   ],

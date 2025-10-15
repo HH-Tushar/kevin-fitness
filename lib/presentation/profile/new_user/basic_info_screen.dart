@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kenvinorellana/common/formater.dart';
+import 'package:kenvinorellana/common/snack_bar.dart';
 import '/common/app_bars.dart';
 import '/common/colors.dart';
 import '/common/gaps.dart';
@@ -36,6 +38,7 @@ class _Layout extends StatelessWidget {
   Widget build(BuildContext context) {
     final BasicInfoController controller = context.watch();
     return Scaffold(
+      backgroundColor: customWhite,
       appBar: childAppBar(context: context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding * 1.5),

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 // import 'package:go_router/go_router.dart';
 import 'package:flutter/gestures.dart';
+import 'package:kenvinorellana/application/auth/auth_controller.dart';
 import 'package:kenvinorellana/common/colors.dart';
 import 'package:kenvinorellana/common/navigator.dart';
+import 'package:kenvinorellana/common/snack_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/gaps.dart';
@@ -11,8 +13,51 @@ import '../../../translation/localization.dart';
 import '../../profile/new_user/basic_info_screen.dart';
 part 'components/signup_fields.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  String email = "";
+  String password = "";
+  String confirmPassword = "";
+  String? emailValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Email is required';
+    }
+
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value.trim())) {
+      return 'Enter a valid email address';
+    }
+
+    return null;
+  }
+
+  void register() async {
+    final (data, error) = await Provider.of<AuthController>(
+      context,
+      listen: false,
+    ).register(email: email, password: password);
+
+    if (data != null) {
+      showToast(
+        context: context,
+        title: "Successfully register. Please fill up your profile",
+        isSuccess: true,
+      );
+      animatedNavigateTo(context, BasicInfoScreen());
+    } else {
+      showToast(
+        context: context,
+        title: error?.title ?? "Something went wrong",
+        isSuccess: false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,21 +145,28 @@ class SignUpScreen extends StatelessWidget {
                   _EmailField(
                     icon: Icons.mail_outline,
                     hint: 'Enter Your Email',
-                    onChange: (e) {},
+                    onChange: (e) {
+                      email = e;
+                    },
                   ),
                   vPad15,
                   _PasswordField(
                     icon: Icons.key,
                     hint: 'Create Password',
-                    onChange: (e) {},
+                    onChange: (e) {
+                      password = e;
+                      setState(() {});
+                    },
                   ),
                   // SizedBox(height: 24),
                   vPad15,
                   _PasswordField(
                     icon: Icons.key,
                     hint: 'Confirm Password',
-                    onChange: (e) {},
-                    currentPassword: "123456",
+                    onChange: (e) {
+                      confirmPassword = e;
+                    },
+                    currentPassword: password,
                   ),
                   // SizedBox(height: 16),
                   vPad35,
@@ -172,8 +224,19 @@ class SignUpScreen extends StatelessWidget {
                   Center(
                     child: GestureDetector(
                       // onTap: () => GoRouter.of(context).go('/main'),
-                      onTap: () =>
-                          animatedNavigateTo(context, BasicInfoScreen()),
+                      onTap: () {
+                        if (emailValidator(email) != null ||
+                            password.length < 6) {
+                          showToast(
+                            context: context,
+                            title: "Please fill up the required fields first",
+                            isSuccess: false,
+                          );
+                          return;
+                        }
+
+                        register();
+                      },
                       child: Container(
                         width: 160,
                         height: 44,

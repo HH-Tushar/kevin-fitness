@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kenvinorellana/application/auth/auth_controller.dart';
-import 'package:kenvinorellana/common/app_bars.dart';
-import 'package:kenvinorellana/common/colors.dart';
-import 'package:kenvinorellana/common/gaps.dart';
+import '/application/auth/auth_controller.dart';
+import '/common/app_bars.dart';
+import '/common/colors.dart';
+import '/common/gaps.dart';
 import 'package:provider/provider.dart';
 
 import '../../../application/auth/models/user_profile_model.dart';
@@ -45,16 +45,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
     setState(() {
       isLoading = true;
     });
-    final (
-      data,
-      error,
-    ) = await Provider.of<AuthController>(context, listen: false).updateProfile(
-      language: Provider.of<LanguageProvider>(
-        context,
-        listen: false,
-      ).currentLanguage,
-      userProfile: profile!,
-    );
+    final (data, error) = await Provider.of<AuthController>(
+      context,
+      listen: false,
+    ).updateProfile(userProfile: profile!);
 
     setState(() {
       isLoading = false;
@@ -155,7 +149,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       child: _buildDropdownField(
                         label: translator.workoutDurationQuestion,
                         value: profile?.routineDuration,
-                        items: ['1 Month', '2 Months', '3 Months', '6 Months'],
+                        items: [
+                          translator.oneMonth,
+                          translator.twoMonth,
+                          translator.threeMonth,
+                          translator.sixMonth,
+                          translator.oneYear,
+                        ],
                         onChanged: (value) {
                           if (value != null) {
                             setState(() {
@@ -171,10 +171,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         label: translator.fitnessLevel,
                         value: profile?.fitnessLevel,
                         items: [
-                          'Beginner',
-                          'Basic',
-                          'Intermediate',
-                          'Advanced',
+                          translator.basic,
+                          translator.beginners,
+                          translator.intermediate,
+                          translator.high,
                         ],
                         onChanged: (value) {
                           setState(() {
@@ -188,7 +188,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       child: _buildDropdownField(
                         label: translator.trainingLocation,
                         value: profile?.trainer,
-                        items: ['At gym', 'At home', 'Outdoor', 'Mixed'],
+                        items: [
+                          translator.atGym,
+                          translator.atHome,
+                          translator.atMartialArts,
+                          translator.atRunning,
+                          translator.atOthersports,
+                        ],
                         onChanged: (value) {
                           if (value != null) {
                             setState(() {
@@ -219,12 +225,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         title: translator.dietaryPreferences,
                         question: translator.dietaryQuestion,
                         options: [
-                          {'key': 'keto', 'label': translator.keto},
-                          {'key': 'paleo', 'label': translator.paleo},
-                          {
-                            'key': 'no_preferences',
-                            'label': translator.noPreferences,
-                          },
+                          translator.keto,
+                          translator.paleo,
+                          translator.vegan,
+                          translator.vegetarian,
+                          translator.glutenFree,
+                          translator.noPreferences,
                         ],
                         selectedValue: profile?.dietaryPreferences ?? "",
                         onChanged: (value) {
@@ -331,9 +337,9 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         title: translator.lifestyleHabits,
                         question: translator.lifestyleQuestion,
                         options: [
-                          {'key': '3_meals', 'label': translator.threeMeals},
-                          {'key': '4_meals', 'label': translator.fourMeals},
-                          {'key': '5_meals', 'label': translator.fiveMeals},
+                          translator.threeMeals,
+                          translator.fourMeals,
+                          translator.fiveMeals,
                         ],
                         selectedValue: profile?.lifestyleHabits ?? "",
                         onChanged: (value) {

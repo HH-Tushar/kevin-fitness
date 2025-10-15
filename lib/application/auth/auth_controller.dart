@@ -2,20 +2,26 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/api_handler.dart';
+import '../../translation/localization.dart';
 import 'auth_repo.dart';
 import 'models/user_credential.dart';
 import 'models/user_info_models.dart';
 import 'models/user_profile_model.dart';
 
 class AuthController extends ChangeNotifier {
-  AuthController() {
+  AuthController(this.context) {
     retrieveUser();
+    init();
   }
+  final BuildContext context;
   UserCredential? _userCredential;
   UserProfile? _userProfile;
   UserInfo? _userInfo;
+
+  bool isFetchingLanguageChanges = false;
   bool get isLogin => _userCredential != null;
   UserProfile? get userProfile => _userProfile;
   UserInfo? get getUserInfo => _userInfo;
@@ -36,9 +42,20 @@ class AuthController extends ChangeNotifier {
     }
   }
 
+  init() async {
+    Provider.of<LanguageProvider>(context, listen: false).addListener(() {
+      onLanguageChange();
+    });
+  }
+
   Future<void> onLanguageChange() async {
+    if (_userCredential == null) return;
+    isFetchingLanguageChanges = true;
     await fetchUserInfo();
-    await fetchProfile(token: _userCredential!.access);
+    await fetchProfile(
+      token: _userCredential!.access,
+      lan: await UserCredentialStorage.readLanguage(),
+    );
   }
 
   Future<String?> refreshToken() async {
@@ -49,7 +66,10 @@ class AuthController extends ChangeNotifier {
       _userCredential?.access = data.accessToken;
       _userCredential?.refresh = data.refreshToken;
       UserCredentialStorage.save(_userCredential!);
-      await fetchProfile(token: _userCredential!.access);
+      await fetchProfile(
+        token: _userCredential!.access,
+        lan: await UserCredentialStorage.readLanguage(),
+      );
       await fetchUserInfo();
       notifyListeners();
       return data.accessToken;
@@ -74,7 +94,35 @@ class AuthController extends ChangeNotifier {
       _userCredential = response;
       UserCredentialStorage.save(response);
       await fetchUserInfo();
-      await fetchProfile(token: response.access);
+      await fetchProfile(
+        token: response.access,
+        lan: await UserCredentialStorage.readLanguage(),
+      );
+      //call others function for home page and notify here
+      return success(response);
+      // save in local and notify listeners
+    } else {
+      return failed(error!);
+    }
+  }
+
+  Future<Attempt<UserCredential>> register({
+    required String email,
+    required String password,
+  }) async {
+    final (response, error) = await authRepo.register(
+      email: email,
+      password: password,
+    );
+
+    if (response != null) {
+      _userCredential = response;
+      UserCredentialStorage.save(response);
+      // await fetchUserInfo();
+      // await fetchProfile(
+      //   token: response.access,
+      //   lan: await UserCredentialStorage.readLanguage(),
+      // );
       //call others function for home page and notify here
       return success(response);
       // save in local and notify listeners
@@ -84,9 +132,10 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<UserInfo?> fetchUserInfo() async {
+    final lan = await UserCredentialStorage.readLanguage();
     final (data, error) = await authRepo.getUserInfo(
       token: _userCredential!.access,
-      language: "language",
+      language: lan,
     );
     if (data != null) {
       _userInfo = data;
@@ -94,12 +143,40 @@ class AuthController extends ChangeNotifier {
       return data;
     }
     notifyListeners();
+    return null;
   }
 
-  Future<Attempt<UserProfile>> fetchProfile({required String token}) async {
+  Future<Attempt<UserProfile>> fetchProfile({
+    required String token,
+    required String lan,
+  }) async {
     final (response, error) = await authRepo.getProfile(
-      language: "",
+      language: lan,
       token: token,
+    );
+    if (response != null) {
+      _userProfile = response;
+      isFetchingLanguageChanges = false;
+      notifyListeners();
+      return success(response);
+      // save in local and notify listeners
+    } else {
+      isFetchingLanguageChanges = false;
+      notifyListeners();
+      return failed(error!);
+    }
+  }
+
+  Future<Attempt<UserProfile>> updateProfile({
+    String? language,
+    required UserProfile userProfile,
+    File? image,
+  }) async {
+    final (response, error) = await authRepo.updateProfile(
+      language: language ?? await UserCredentialStorage.readLanguage(),
+      token: accessToken!,
+      userProfile: userProfile,
+      image: image,
     );
     if (response != null) {
       _userProfile = response;
@@ -110,16 +187,16 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  Future<Attempt<UserProfile>> updateProfile({
-    required String language,
-    required UserProfile userProfile,
-    File ?image,
+  Future<Attempt<UserProfile>> updateProfilePicture({
+    // required String language,
+    // required UserProfile userProfile,
+    File? image,
   }) async {
     final (response, error) = await authRepo.updateProfile(
-      language: language,
+      language: await UserCredentialStorage.readLanguage(),
       token: accessToken!,
-      userProfile: userProfile,
-      image:image
+      userProfile: _userProfile!,
+      image: image,
     );
     if (response != null) {
       _userProfile = response;
@@ -140,6 +217,7 @@ class AuthController extends ChangeNotifier {
 
 class UserCredentialStorage {
   static const _key = 'user_credential';
+  static const _lan = 'lan';
 
   /// Save UserCredential to SharedPreferences
   static Future<void> save(UserCredential credential) async {
@@ -160,5 +238,11 @@ class UserCredentialStorage {
   static Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_key);
+  }
+
+  static Future<String> readLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lan = prefs.getString(_lan) ?? "english";
+    return lan;
   }
 }

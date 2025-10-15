@@ -51,7 +51,6 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
     if (data != null) {
       showToast(context: context, title: data, isSuccess: true);
       animatedNavigateTo(context, ResetPasswordScreen(email: widget.email));
-      // animatedNavigateTo(context, VerifyOtpView(email: emailController.text));
     } else {
       showToast(
         context: context,
@@ -71,6 +70,7 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
     final LanguageProvider translator = context.watch();
     final authTranslator = translator.authTranslation;
     return Scaffold(
+      backgroundColor: customWhite,
       appBar: childAppBar(context: context),
       body: SafeArea(
         child: Padding(
@@ -79,6 +79,7 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              vPad10,
               Text(
                 authTranslator.oTPVerification,
                 style: TextStyle(
@@ -90,7 +91,7 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
                 ),
               ),
               Text(
-                "We sent you a one time password on your email yji******gmail.com. Enter the OTP to complete verify.",
+                "We sent you a one time password on your email ${widget.email}. Enter the OTP to complete verify.",
                 style: TextStyle(
                   color: customGreyText,
                   fontSize: 13,

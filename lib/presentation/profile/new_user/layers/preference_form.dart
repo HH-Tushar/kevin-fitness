@@ -88,11 +88,14 @@ class PreferencesForm extends StatelessWidget {
         SizedBox(height: 32.0),
         Center(
           child: primaryFilledButton(
-            onTap: () {
-              controller.uploadDetails(context);
-            },
+            isLoading: controller.isLoading,
+            onTap: controller.isLoading
+                ? () {}
+                : () {
+                    controller.uploadDetails(context);
+                  },
             title: "Continue",
-            isEnable: true,
+            isEnable: !controller.isLoading,
           ),
         ),
         // Continue Button

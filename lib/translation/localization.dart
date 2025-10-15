@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ai_screen_translation.dart';
 import 'auth_translation.dart';
@@ -13,6 +14,9 @@ import 'upgrade_plan_translation.dart';
 import 'workout_plan_transaltoin.dart';
 
 class LanguageProvider with ChangeNotifier {
+  LanguageProvider() {
+    readLanguage();
+  }
   bool _isEnglish = true;
 
   bool get isEnglish => _isEnglish;
@@ -23,8 +27,27 @@ class LanguageProvider with ChangeNotifier {
     if (changeToEng == true && _isEnglish == true) {
       return;
     }
+
     _isEnglish = changeToEng;
+    writeLanguage(currentLanguage);
     notifyListeners();
+  }
+
+  void readLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lan = prefs.getString("lan");
+    if (lan == "english") {
+      _isEnglish = true;
+    } else {
+      _isEnglish = false;
+    }
+
+    notifyListeners();
+  }
+
+  writeLanguage(String language) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("lan", language);
   }
 
   BasicInfoTranslation get basicInfoTranslation =>
@@ -40,15 +63,15 @@ class LanguageProvider with ChangeNotifier {
   SettingTranslation get settingTranslation =>
       _isEnglish ? SettingEnglish() : SettingSpanish();
   UpgradePlanTranslation get upgradePlanTranslation =>
-      _isEnglish ?UpgradePlanEnglish() :UpgradePlanSpanish();
+      _isEnglish ? UpgradePlanEnglish() : UpgradePlanSpanish();
   ProfileUpdateTranslation get profileUpdateTranslation =>
-      _isEnglish ?ProfileUpdateEnglish() :ProfileUpdateSpanish();
+      _isEnglish ? ProfileUpdateEnglish() : ProfileUpdateSpanish();
   HomeTranslation get homeTranslation =>
-      _isEnglish ?HomeEnglish() :HomeSpanish();
+      _isEnglish ? HomeEnglish() : HomeSpanish();
   FeedbackTranslation get feedbackTranslation =>
-      _isEnglish ?FeedbackEnglish() :FeedbackSpanish();
+      _isEnglish ? FeedbackEnglish() : FeedbackSpanish();
   SummaryTranslation get summaryTranslation =>
-      _isEnglish ?SummaryEnglish() :SummarySpanish();
+      _isEnglish ? SummaryEnglish() : SummarySpanish();
 
   // Add other translation getters here
 }

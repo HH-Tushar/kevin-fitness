@@ -57,7 +57,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (data != null) {
       showToast(context: context, title: data, isSuccess: true);
       animatedNavigateReplaceAll(context, LoginScreen());
-      // animatedNavigateTo(context, VerifyOtpView(email: emailController.text));
+
     } else {
       showToast(
         context: context,
@@ -77,7 +77,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     // final LanguageProvider translator = context.watch();
     // final authTranslator = translator.authTranslation;
     return Scaffold(
-      // backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: childAppBar(context: context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding * 1.5),
@@ -133,137 +133,19 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               currentPassword: newPassword,
             ),
 
-            // // New Password field
-            // Column(
-            //   children: [
-            //     Row(
-            //       children: [
-            //         Icon(Icons.key, size: 16, color: const Color(0xFF767781)),
-            //         SizedBox(width: 7),
-            //         Expanded(
-            //           child: TextField(
-            //             obscureText: true,
-            //             style: TextStyle(
-            //               color: const Color(0xFF222A2C),
-            //               fontSize: 14,
-            //               fontFamily: 'Outfit',
-            //               fontWeight: FontWeight.w400,
-            //               decoration: TextDecoration.none,
-            //             ),
-            //             decoration: InputDecoration(
-            //               hintText: 'New Password',
-            //               hintStyle: TextStyle(
-            //                 color: const Color(0xFF767781),
-            //                 fontSize: 14,
-            //                 fontFamily: 'Outfit',
-            //                 fontWeight: FontWeight.w400,
-            //               ),
-            //               border: InputBorder.none,
-            //               isDense: true,
-            //               // contentPadding: EdgeInsets.symmetric(vertical: 5.h),
-            //             ),
-            //             onChanged: (e) {},
-            //           ),
-            //         ),
-            //         Icon(
-            //           Icons.visibility_off,
-            //           size: 18,
-            //           color: const Color(0xFF767781),
-            //         ),
-            //       ],
-            //     ),
-            //     Divider(height: 1, color: const Color(0xFF767781)),
-            //   ],
-            // ),
-
-            // // Confirm New Password field
-            // Column(
-            //   children: [
-            //     Row(
-            //       children: [
-            //         Icon(Icons.key, size: 16, color: const Color(0xFF767781)),
-            //         SizedBox(width: 7),
-            //         Expanded(
-            //           child: TextField(
-            //             obscureText: true,
-            //             style: TextStyle(
-            //               color: const Color(0xFF222A2C),
-            //               fontSize: 14,
-            //               fontFamily: 'Outfit',
-            //               fontWeight: FontWeight.w400,
-            //               decoration: TextDecoration.none,
-            //             ),
-            //             decoration: InputDecoration(
-            //               hintText: 'Confirm New Password',
-            //               hintStyle: TextStyle(
-            //                 color: const Color(0xFF767781),
-            //                 fontSize: 14,
-            //                 fontFamily: 'Outfit',
-            //                 fontWeight: FontWeight.w400,
-            //               ),
-            //               border: InputBorder.none,
-            //               isDense: true,
-            //               // contentPadding: EdgeInsets.symmetric(vertical: 5.h),
-            //             ),
-            //           ),
-            //         ),
-            //         Icon(
-            //           Icons.visibility_off,
-            //           size: 18,
-            //           color: const Color(0xFF767781),
-            //         ),
-            //       ],
-            //     ),
-            //     Divider(height: 1, color: const Color(0xFF767781)),
-            //   ],
-            // ),
-
-            // // Container(width: 320, height: 1, color: const Color(0xFF767781)),
             // Continue button
             vPad5,
             Center(
               child: primaryFilledButton(
                 onTap: () async {
                   setPassword();
-                  //if success get to loginPage again
-
-                  // showToast(context: context, title: "title", isSuccess: true);
-                  // showToast(context: context, title: "title", isSuccess: false);
-
-                  // animatedNavigateReplaceAll(context, LoginScreen());
                 },
                 title: "Continue",
                 isEnable: true,
               ),
             ),
 
-            //   GestureDetector(
-            //     onTap: () {},
-            //     child: Container(
-            //       width: 160,
-            //       height: 44,
-            //       decoration: BoxDecoration(
-            //         color: const Color(0xFF343F41),
-            //         border: Border.all(
-            //           color: const Color(0xFF767781),
-            //           width: 0.69,
-            //         ),
-            //         borderRadius: BorderRadius.circular(6),
-            //       ),
-            //       child: Center(
-            //         child: Text(
-            //           'Continue',
-            //           style: TextStyle(
-            //             color: Colors.white,
-            //             fontSize: 18,
-            //             fontFamily: 'Outfit',
-            //             fontWeight: FontWeight.w400,
-            //             decoration: TextDecoration.none,
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
+          
           ],
         ),
       ),

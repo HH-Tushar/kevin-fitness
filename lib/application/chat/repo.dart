@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:kenvinorellana/env.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/chat/chat_view.dart';
 import '../header.dart';

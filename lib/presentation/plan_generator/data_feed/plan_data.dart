@@ -25,7 +25,6 @@ class _AiDataFeedState extends State<AiDataFeed> {
   bool isLoading = false;
 
   void postPlan() async {
-
     setState(() {
       isLoading = true;
     });
@@ -36,8 +35,19 @@ class _AiDataFeedState extends State<AiDataFeed> {
 
     if (data != null) {
       showToast(context: context, title: data, isSuccess: true);
-      Navigator.pop(context,true);
+      Navigator.pop(context, true);
+    } else {
+      showToast(
+        context: context,
+        title: error?.title ?? "Something went wrong",
+        isSuccess: false,
+      );
     }
+
+    if (error != null && error.code == 409) {
+      Navigator.pop(context);
+    }
+
     setState(() {
       isLoading = false;
     });

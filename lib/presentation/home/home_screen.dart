@@ -224,8 +224,8 @@ class _HomeHeader extends StatelessWidget {
                   backgroundColor: Colors.white.withOpacity(0.08),
                   backgroundImage:
                       authController.userProfile?.image != null &&
-                          authController.userProfile!.image.isNotEmpty
-                      ? NetworkImage(authController.userProfile!.image)
+                          authController.userProfile!.image!.isNotEmpty
+                      ? NetworkImage(authController.userProfile!.image!)
                       : null,
 
                   child: authController.userProfile?.image == null

@@ -7,6 +7,7 @@ class ProfileTextField extends StatelessWidget {
   final String value;
   final FilteringTextInputFormatter? formatter;
   final ValueChanged<String> onChanged;
+  final Function(String?) validator;
 
   const ProfileTextField({
     super.key,
@@ -14,6 +15,7 @@ class ProfileTextField extends StatelessWidget {
     required this.hint,
     this.suffix,
     this.formatter,
+    required this.validator,
     required this.value,
     required this.onChanged,
   });
@@ -42,6 +44,8 @@ class ProfileTextField extends StatelessWidget {
                 fontFamily: 'Outfit',
                 fontWeight: FontWeight.w400,
               ),
+              validator: (e) => validator(e),
+
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: TextStyle(

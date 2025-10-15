@@ -348,6 +348,7 @@ Widget _buildTextAreaField({
   String? initialValue,
   required ValueChanged<String> onChanged,
   required String hint,
+  required Function(String?) validation,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,6 +373,7 @@ Widget _buildTextAreaField({
         child: TextFormField(
           // controller: controller,
           initialValue: initialValue,
+          validator: (value) => validation(value),
           onChanged: onChanged,
           maxLines: 1,
           style: TextStyle(
@@ -396,6 +398,3 @@ Widget _buildTextAreaField({
     ],
   );
 }
-
-
-

@@ -41,6 +41,8 @@ class DailyPlanProvider extends ChangeNotifier {
   }
 
   void fetchInitialData() async {
+    // Provider.of<AuthController>(context, listen: false).onLanguageChange();
+
     language = Provider.of<LanguageProvider>(
       context,
       listen: false,
@@ -125,7 +127,7 @@ class DailyPlanProvider extends ChangeNotifier {
       final (data, error) = await dailyPlanRepo.updateWorkoutPlanUnit(
         id: uniqueId,
         token: Provider.of<AuthController>(context, listen: false).accessToken!,
-        isDone:        !todayWorkoutPlan!.workouts[index].completed,
+        isDone: !todayWorkoutPlan!.workouts[index].completed,
       );
       //if success
       if (data != null) {
@@ -142,15 +144,14 @@ class DailyPlanProvider extends ChangeNotifier {
       }
     }
   }
+
   Future<void> markMealPlanAsDone({
     required int uniqueId,
     required BuildContext contex,
   }) async {
     if (uniqueId == -1) return;
 
-    final index = todayMealPlan?.todayMeals.indexWhere(
-      (e) => e.id == uniqueId,
-    );
+    final index = todayMealPlan?.todayMeals.indexWhere((e) => e.id == uniqueId);
     if (index != null && index != -1) {
       // call api
       final (data, error) = await dailyPlanRepo.updateMealPlanUnit(
@@ -173,32 +174,6 @@ class DailyPlanProvider extends ChangeNotifier {
       }
     }
   }
-
-  // Future<void> markMealPlanAsDone({
-  //   required int uniqueId,
-  //   required BuildContext contex,
-  // }) async {
-  //   final index = todayMealPlan?.todayMeals.indexWhere(
-  //     (e) => e.recipe.id == uniqueId,
-  //   );
-  //   if (index != null && index != -1) {
-  //     //call api
-
-  //     //if success
-
-  //     todayMealPlan!.todayMeals[index].completed =
-  //         !todayMealPlan!.todayMeals[index].completed;
-
-  //     print(todayMealPlan!.todayMeals[index].completed);
-  //     notifyListeners();
-  //     //show toast
-  //     showToast(
-  //       context: contex,
-  //       title: "Successfully updated the workout plan",
-  //       isSuccess: true,
-  //     );
-  //   }
-  // }
 
   Future<void> fetchDailyPlan({
     DateTime? date,

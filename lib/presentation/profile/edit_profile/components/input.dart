@@ -186,7 +186,7 @@ Widget _buildDropdownField({
 Widget _buildRadioSection({
   required String title,
   required String question,
-  required List<Map<String, String>> options,
+  required List<String> options,
   required String selectedValue,
   required ValueChanged<String> onChanged,
 }) {
@@ -215,9 +215,9 @@ Widget _buildRadioSection({
       SizedBox(height: 16),
       ...options.map(
         (option) => _buildRadioOption(
-          option: option['label']!,
-          isSelected: selectedValue == option['key'],
-          onChanged: (value) => onChanged(option['key']!),
+          option: option,
+          isSelected: selectedValue == option,
+          onChanged: (value) => onChanged(option),
         ),
       ),
     ],

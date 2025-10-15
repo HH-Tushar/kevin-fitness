@@ -27,6 +27,7 @@ class PlanGeneratorView extends StatefulWidget {
 class _PlanGeneratorViewState extends State<PlanGeneratorView> {
   final SearchRepo searchRepo = SearchRepo();
   bool isLoading = false;
+  bool isCreatingMealPlan = false;
   void recheck() async {
     setState(() {
       isLoading = true;
@@ -50,8 +51,9 @@ class _PlanGeneratorViewState extends State<PlanGeneratorView> {
 
   void requestMealPlan() async {
     setState(() {
-      isLoading = true;
+      isCreatingMealPlan = true;
     });
+
     final (data, error) = await searchRepo.reqMealPlan();
 
     if (data != null) {
@@ -68,7 +70,7 @@ class _PlanGeneratorViewState extends State<PlanGeneratorView> {
       );
     }
     setState(() {
-      isLoading = false;
+      isCreatingMealPlan = false;
     });
   }
 
@@ -160,7 +162,7 @@ class _PlanGeneratorViewState extends State<PlanGeneratorView> {
                                   onTap: () {
                                     requestMealPlan();
                                   },
-                                  isLoading: false,
+                                  isLoading: isCreatingMealPlan,
                                 ),
                               ],
                             ),
@@ -193,7 +195,12 @@ class _PlanGeneratorViewState extends State<PlanGeneratorView> {
                                               onFeedbackTap: () {
                                                 animatedNavigateTo(
                                                   context,
-                                                  FeedbackView(),
+                                                  FeedbackView(
+                                                    meal_plan_id: userInfo
+                                                        .mealPlans
+                                                        .first
+                                                        .id,
+                                                  ),
                                                 );
                                               },
                                             )
@@ -208,7 +215,12 @@ class _PlanGeneratorViewState extends State<PlanGeneratorView> {
                                               onFeedbackTap: () {
                                                 animatedNavigateTo(
                                                   context,
-                                                  FeedbackView(),
+                                                  FeedbackView(
+                                                    workout_plan_id: userInfo
+                                                        .workoutPlans
+                                                        .first
+                                                        .id,
+                                                  ),
                                                 );
                                               },
                                             )

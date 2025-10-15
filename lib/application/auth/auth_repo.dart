@@ -89,6 +89,46 @@ class AuthRepo {
     }
   }
 
+  Future<Attempt<UserCredential>> register({
+    required String email,
+    required String password,
+  }) async {
+    final String url = '$baseUrl/register/';
+
+    // Create the body of the POST request
+    final Map<String, String> body = {"email": email, "password": password};
+
+    // Set the headers for the request
+    final Map<String, String> headers = {"Content-Type": "application/json"};
+
+    try {
+      // Send the POST request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      // Check the status of the response
+      if (response.statusCode == 201) {
+        // If the server responds with a 200 OK, parse the response
+        return success(UserCredential.fromJson(json.decode(response.body)));
+      } else if (response.statusCode == 401) {
+        return failed(Failure(title: "Invalid Email or Password"));
+      } else {
+        final res = jsonDecode(response.body);
+        return failed(Failure(title: res["error"]));
+      }
+    } on SocketException {
+      return failed(InternetFailure());
+    } catch (e) {
+      dPrint(e.toString());
+      return failed(
+        Failure(title: "Something went wrong. Please try again later."),
+      );
+    }
+  }
+
   Future<Attempt<String>> sentOTP({required String email}) async {
     final String url = '$baseUrl/send-otp/';
 
@@ -148,7 +188,8 @@ class AuthRepo {
         final msg = jsonDecode(response.body);
         return success(msg["message"]);
       } else if (response.statusCode == 400) {
-        return failed(Failure(title: "No user found with $email e-mail"));
+        final msg = jsonDecode(response.body);
+        return failed(Failure(title: msg["error"]));
       } else {
         throw Exception('Failed to log in: ${response.body}');
       }
@@ -207,7 +248,7 @@ class AuthRepo {
     required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/profile/get_profile_english/';
+    final String url = '$baseUrl/profile/get_profile_$language/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -244,7 +285,7 @@ class AuthRepo {
     required UserProfile userProfile,
     File? image,
   }) async {
-    final String url = '$baseUrl/profile/patch_profile_english/';
+    final String url = '$baseUrl/profile/patch_profile_$language/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
@@ -269,26 +310,29 @@ class AuthRepo {
         );
         request.files.add(multipartFile);
 
-        final dataWithoutImage = Map<String, dynamic>.from(
-          userProfile.toJson(),
-        );
-        dataWithoutImage.remove('image');
+        // final dataWithoutImage = Map<String, dynamic>.from(
+        //   userProfile.toJson(),
+        // );
+        // dataWithoutImage.remove('image');
 
-        dataWithoutImage.forEach((key, value) {
-          if (value != null && value.toString().isNotEmpty) {
-            request.fields[key] = value.toString();
-          }
-        });
+        // dataWithoutImage.forEach((key, value) {
+        //   if (value != null && value.toString().isNotEmpty) {
+        //     request.fields[key] = value.toString();
+        //   }
+        // });
 
         final streamedResponse = await request.send().timeout(
           const Duration(seconds: 30),
         );
         response = await http.Response.fromStream(streamedResponse);
       } else {
+        final bodyData = userProfile.toJson();
+        bodyData.remove("image");
+        print(bodyData);
         response = await http.patch(
           Uri.parse(url),
           headers: headers,
-          body: jsonEncode(userProfile.toJson()),
+          body: jsonEncode(bodyData),
         );
       }
 
@@ -314,7 +358,7 @@ class AuthRepo {
     required String token,
     required String language,
   }) async {
-    final String url = '$baseUrl/userapi/user/info/';
+    final String url = '$baseUrl/userapi/user/info/$language/';
 
     // Set the headers for the request
     final Map<String, String> headers = {
